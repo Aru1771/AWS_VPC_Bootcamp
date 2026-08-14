@@ -1,17 +1,18 @@
 ☁️ AWS VPC – Day 5: Connectivity
-
+=================================
 Today's topics:
 
-VPC Peering
-Transit Gateway
-Site-to-Site VPN
-Direct Connect
-AWS PrivateLink
-VPC Endpoints
-Gateway Endpoint
-Interface Endpoint
+1. VPC Peering
+2. Transit Gateway
+3. Site-to-Site VPN
+4. Direct Connect
+5. AWS PrivateLink
+6. VPC Endpoints
+7. Gateway Endpoint
+8. Interface Endpoint
+   
 1. Why Do We Need Connectivity?
-
+   ---------------------------
 Imagine you have multiple networks:
 
 VPC-A
@@ -32,7 +33,7 @@ They cannot communicate just because both are inside AWS.
 We need connectivity mechanisms.
 
 2. VPC Peering
-
+   -----------
 Suppose you have only two VPCs:
 
 VPC-A
@@ -66,12 +67,13 @@ Creating the peering connection alone isn't enough.
 You need routes.
 
 VPC-A route table:
+------------------
 
 Destination       Target
 
 10.0.0.0/16       local
 
-10.1.0.0/16       VPC Peering
+10.1.0.0/16       VPC Peering  ---> VPC B CIDR
 
 VPC-B:
 
@@ -79,9 +81,12 @@ Destination       Target
 
 10.1.0.0/16       local
 
-10.0.0.0/16       VPC Peering
-3. Problem With VPC Peering
+10.0.0.0/16       VPC Peering  ---> VPC A CIDR
 
+
+
+3. Problem With VPC Peering
+   ------------------------
 Imagine you have:
 
 VPC-A
@@ -111,7 +116,7 @@ This becomes difficult to manage.
 That's where Transit Gateway comes in.
 
 4. Transit Gateway
-
+   ---------------
 Think of Transit Gateway as a central network router.
 
               VPC-A
@@ -137,7 +142,7 @@ VPC-E ──┘
 Each VPC connects to the Transit Gateway.
 
 5. Production Example
-
+   ------------------
 Suppose your company has:
 
 Production VPC
@@ -162,18 +167,24 @@ Development ── Transit Gateway ── Security
 This is much easier to manage at scale.
 
 6. VPC Peering vs Transit Gateway
-VPC Peering	Transit Gateway
-Direct connection	Central router
-Good for few VPCs	Good for many VPCs
-Point-to-point	Hub-and-spoke
-More connections at scale	Centralized routing
-No transitive routing	Supports transitive routing
+   ------------------------------
+VPC Peering	                   Transit Gateway
+-------------------------------------------------
+Direct connection       	    Central router
+Good for few VPCs   	        Good for many VPCs
+Point-to-point	                Hub-and-spoke
+More connections at scale	    Centralized routing
+No transitive routing	        Supports transitive routing
+
+
 Easy memory:
 2 VPCs → Peering
 
 Many VPCs → Transit Gateway
-7. Site-to-Site VPN
 
+
+7. Site-to-Site VPN
+   -----------------
 Now imagine your company has an on-premises data center.
 
 Company Data Center
@@ -185,14 +196,16 @@ Company Data Center
        AWS
         │
         ▼
-VPC
-10.0.0.0/16
+       VPC
+    10.0.0.0/16
 
 How can on-premises communicate privately with AWS?
 
 Use AWS Site-to-Site VPN.
 
 8. VPN Architecture
+   -----------------
+
         ON-PREMISES
         Data Center
              │
@@ -214,7 +227,7 @@ Use AWS Site-to-Site VPN.
 The traffic travels over the internet but is encrypted through the VPN tunnel.
 
 9. Example
-
+   -------
 Your company has:
 
 On-Premises
@@ -236,7 +249,7 @@ VPN allows:
 Applications can communicate privately between the networks.
 
 10. Direct Connect
-
+    --------------
 Now imagine your company has very important production workloads.
 
 You don't want your AWS traffic to travel over the public internet.
@@ -259,40 +272,46 @@ AWS Direct Connect
 AWS
      │
      ▼
-VPC
+   VPC
+   
 11. VPN vs Direct Connect
-VPN
+    ----------------------
+VPN:
 On-Prem
    │
    │ Internet
    │ Encrypted Tunnel
    ▼
 AWS
-Direct Connect
+
+Direct Connect:
 On-Prem
    │
    │ Dedicated Connection
    ▼
 AWS
-VPN	Direct Connect
-Uses internet	Dedicated connection
-Encrypted tunnel	Private connectivity
-Faster to deploy	More setup
-Generally lower cost	More expensive
-Good for many use cases	Good for high-throughput/consistent connectivity
+
+VPN	                   Direct Connect
+-------------------------------------
+Uses internet	            Dedicated connection
+Encrypted tunnel	        Private connectivity
+Faster to deploy	        More setup
+Generally lower cost	    More expensive
+Good for many use cases	    Good for high-throughput/consistent connectivity
 
 A common production design is actually:
 
 Direct Connect
       +
 VPN backup
-12. PrivateLink
 
+12. PrivateLink
+    ------------
 Now let's look at a different problem.
 
 Suppose Company A provides a service:
 
-Payment Service
+         Payment Service
 
 Company B wants to consume it.
 
@@ -300,18 +319,19 @@ You don't necessarily want to connect the entire VPCs.
 
 Instead:
 
-Consumer VPC
-     │
-     │
-     ▼
-AWS PrivateLink
-     │
-     ▼
-Provider Service
+    Consumer VPC
+         │
+         │
+         ▼
+    AWS PrivateLink
+         │
+         ▼
+    Provider Service
 
 PrivateLink provides private access to a specific service without requiring full network connectivity between the VPCs.
 
 13. Easy Difference
+    ----------------
 VPC Peering
 VPC A  ←────────→  VPC B
 
@@ -327,7 +347,7 @@ Specific Service
 Service-to-consumer connectivity.
 
 14. VPC Endpoints
-
+    -------------
 Now imagine your private EC2 needs to access:
 
 Amazon S3
@@ -360,7 +380,7 @@ S3
 Traffic can stay within the AWS network instead of requiring a NAT Gateway for that service.
 
 15. Two Important Types
-
+    -------------------
 There are two main types you need to know:
 
 VPC Endpoint
@@ -368,8 +388,9 @@ VPC Endpoint
 ├── Gateway Endpoint
 │
 └── Interface Endpoint
-16. Gateway Endpoint
 
+16. Gateway Endpoint
+    ----------------
 Gateway endpoints are used for:
 
 S3
@@ -386,12 +407,12 @@ Route Table
 Gateway Endpoint
      │
      ▼
-S3
+    S3
 
 You configure a route to the endpoint.
 
 17. Example: S3
-
+    -----------
 Suppose your private EC2 needs to download something from S3.
 
 Without endpoint:
@@ -420,7 +441,7 @@ S3
 This can reduce NAT Gateway usage and costs.
 
 18. Interface Endpoint
-
+    -------------------
 Interface endpoints use:
 
 Elastic Network Interface (ENI)
@@ -445,7 +466,7 @@ AWS Service
 They are powered by AWS PrivateLink.
 
 19. Examples of Interface Endpoints
-
+    -------------------------------
 Many AWS services can be accessed through interface endpoints.
 
 For example:
@@ -461,7 +482,7 @@ KMS
 The exact services available depends on the AWS region/service support.
 
 20. Your EKS Example
-
+    -----------------
 This is especially useful for your EKS knowledge.
 
 Imagine your EKS nodes are in private subnets.
@@ -501,14 +522,18 @@ you can use VPC endpoints:
 This is a very useful production networking pattern.
 
 21. Gateway vs Interface Endpoint
+    -------------------------------
 Gateway Endpoint	Interface Endpoint
-S3, DynamoDB	Many AWS services
-Uses route tables	Uses ENI
-No hourly endpoint charge	Hourly/data processing charges generally apply
-Doesn't use PrivateLink	Uses AWS PrivateLink
-Simple routing	DNS/ENI-based access
-22. Complete Day 5 Picture
+--------------------------------------
+S3, DynamoDB	                 Many AWS services
+Uses route tables	             Uses ENI
+No hourly endpoint charge	     Hourly/data processing charges generally apply
+Doesn't use PrivateLink	Uses     AWS PrivateLink
+Simple routing	                 DNS/ENI-based access
 
+
+23. Complete Day 5 Picture
+    -------------------------
 Now put everything together:
 
                          AWS
@@ -582,7 +607,9 @@ S3 / DynamoDB
 Interface Endpoint
     ↓
 Many AWS services using ENIs/PrivateLink
+
 🎤 Interview Questions
+-------------------------
 1. VPC Peering vs Transit Gateway?
 
 VPC Peering provides direct point-to-point connectivity between VPCs, while Transit Gateway acts as a centralized network hub for connecting multiple VPCs, VPNs, and other networks.
