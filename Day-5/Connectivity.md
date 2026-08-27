@@ -15,18 +15,18 @@ Today's topics:
    ---------------------------
 Imagine you have multiple networks:
 
-VPC-A
-10.0.0.0/16
-
-VPC-B
-10.1.0.0/16
-
-On-Premises
-192.168.0.0/16
+            VPC-A
+            10.0.0.0/16
+            
+            VPC-B
+            10.1.0.0/16
+            
+            On-Premises
+            192.168.0.0/16
 
 By default:
 
-VPC-A  ❌  VPC-B
+         VPC-A  ❌  VPC-B
 
 They cannot communicate just because both are inside AWS.
 
@@ -36,27 +36,28 @@ We need connectivity mechanisms.
    -----------
 Suppose you have only two VPCs:
 
-VPC-A
-10.0.0.0/16
-    │
-    │ Peering
-    │
-    ▼
-VPC-B
-10.1.0.0/16
+         VPC-A
+         10.0.0.0/16
+             │
+             │ Peering
+             │
+             ▼
+         VPC-B
+         10.1.0.0/16
 
 VPC Peering creates a private network connection between two VPCs.
 
 Traffic stays on the AWS network.
 
-Example
-Application VPC
-10.0.0.0/16
-      │
-      │ VPC Peering
-      ▼
-Database VPC
-10.1.0.0/16
+Example:
+
+      Application VPC
+      10.0.0.0/16
+            │
+            │ VPC Peering
+            ▼
+      Database VPC
+      10.1.0.0/16
 
 Your application can privately communicate with resources in the other VPC.
 
@@ -69,19 +70,19 @@ You need routes.
 VPC-A route table:
 ------------------
 
-Destination       Target
-
-10.0.0.0/16       local
-
-10.1.0.0/16       VPC Peering  ---> VPC B CIDR
+         Destination       Target
+         
+         10.0.0.0/16       local
+         
+         10.1.0.0/16       VPC Peering  ---> VPC B CIDR
 
 VPC-B:
 
-Destination       Target
-
-10.1.0.0/16       local
-
-10.0.0.0/16       VPC Peering  ---> VPC A CIDR
+         Destination       Target
+         
+         10.1.0.0/16       local
+         
+         10.0.0.0/16       VPC Peering  ---> VPC A CIDR
 
 
 
@@ -89,26 +90,26 @@ Destination       Target
    ------------------------
 Imagine you have:
 
-VPC-A
-  │
-  ├── VPC-B
-  │
-  ├── VPC-C
-  │
-  ├── VPC-D
-  │
-  └── VPC-E
+         VPC-A
+           │
+           ├── VPC-B
+           │
+           ├── VPC-C
+           │
+           ├── VPC-D
+           │
+           └── VPC-E
 
 With peering, you need many individual connections.
 
 For example:
 
-A ─── B
-A ─── C
-A ─── D
-A ─── E
-B ─── C
-B ─── D
+         A ─── B
+         A ─── C
+         A ─── D
+         A ─── E
+         B ─── C
+         B ─── D
 ...
 
 This becomes difficult to manage.
@@ -133,11 +134,11 @@ Think of Transit Gateway as a central network router.
 
 Instead of connecting every VPC to every other VPC:
 
-VPC-A ──┐
-VPC-B ──┤
-VPC-C ──┼── Transit Gateway
-VPC-D ──┤
-VPC-E ──┘
+         VPC-A ──┐
+         VPC-B ──┤
+         VPC-C ──┼── Transit Gateway
+         VPC-D ──┤
+         VPC-E ──┘
 
 Each VPC connects to the Transit Gateway.
 
@@ -145,40 +146,42 @@ Each VPC connects to the Transit Gateway.
    ------------------
 Suppose your company has:
 
-Production VPC
-Development VPC
-Testing VPC
-Security VPC
-Shared Services VPC
+      Production VPC
+      Development VPC
+      Testing VPC
+      Security VPC
+      Shared Services VPC
 
 Architecture:
 
-              Production
-                  │
-                  │
-Development ── Transit Gateway ── Security
-                  │
-                  │
-             Shared Services
-                  │
-                  │
-                Testing
+                       Production
+                           │
+                           │
+         Development ── Transit Gateway ── Security
+                           │
+                           │
+                      Shared Services
+                           │
+                           │
+                         Testing
 
 This is much easier to manage at scale.
 
 6. VPC Peering vs Transit Gateway
    ------------------------------
-VPC Peering	                   Transit Gateway
--------------------------------------------------
-Direct connection       	    Central router
-Good for few VPCs   	        Good for many VPCs
-Point-to-point	                Hub-and-spoke
-More connections at scale	    Centralized routing
-No transitive routing	        Supports transitive routing
+   
+            VPC Peering	                   Transit Gateway
+            -------------------------------------------------
+            Direct connection       	    Central router
+            Good for few VPCs   	          Good for many VPCs
+            Point-to-point	                Hub-and-spoke
+            More connections at scale	    Centralized routing
+            No transitive routing	       Supports transitive routing
 
 
 Easy memory:
-2 VPCs → Peering
+
+            2 VPCs → Peering
 
 Many VPCs → Transit Gateway
 
@@ -187,17 +190,17 @@ Many VPCs → Transit Gateway
    -----------------
 Now imagine your company has an on-premises data center.
 
-Company Data Center
-192.168.0.0/16
-        │
-        │ Internet
-        │
-        ▼
-       AWS
-        │
-        ▼
-       VPC
-    10.0.0.0/16
+         Company Data Center
+         192.168.0.0/16
+                 │
+                 │ Internet
+                 │
+                 ▼
+                AWS
+                 │
+                 ▼
+                VPC
+             10.0.0.0/16
 
 How can on-premises communicate privately with AWS?
 
@@ -230,21 +233,21 @@ The traffic travels over the internet but is encrypted through the VPN tunnel.
    -------
 Your company has:
 
-On-Premises
-10.20.0.0/16
+      On-Premises
+      10.20.0.0/16
 
 AWS:
 
-VPC
-10.0.0.0/16
+      VPC
+      10.0.0.0/16
 
 VPN allows:
 
-10.20.0.0/16
-       │
-       │ VPN
-       ▼
-10.0.0.0/16
+      10.20.0.0/16
+             │
+             │ VPN
+             ▼
+      10.0.0.0/16
 
 Applications can communicate privately between the networks.
 
@@ -260,43 +263,45 @@ AWS Direct Connect
 
 It provides a dedicated network connection from your on-premises environment to AWS.
 
-On-Premises
-Data Center
-     │
-     │ Dedicated Connection
-     │
-     ▼
-AWS Direct Connect
-     │
-     ▼
-AWS
-     │
-     ▼
-   VPC
+         On-Premises
+         Data Center
+              │
+              │ Dedicated Connection
+              │
+              ▼
+         AWS Direct Connect
+              │
+              ▼
+         AWS
+              │
+              ▼
+            VPC
    
 11. VPN vs Direct Connect
     ----------------------
 VPN:
-On-Prem
-   │
-   │ Internet
-   │ Encrypted Tunnel
-   ▼
-AWS
+
+            On-Prem
+               │
+               │ Internet
+               │ Encrypted Tunnel
+               ▼
+            AWS
 
 Direct Connect:
-On-Prem
-   │
-   │ Dedicated Connection
-   ▼
-AWS
+
+      On-Prem
+         │
+         │ Dedicated Connection
+         ▼
+        AWS
 
 VPN	                   Direct Connect
 -------------------------------------
-Uses internet	            Dedicated connection
-Encrypted tunnel	        Private connectivity
-Faster to deploy	        More setup
-Generally lower cost	    More expensive
+Uses internet	             Dedicated connection
+Encrypted tunnel	          Private connectivity
+Faster to deploy	          More setup
+Generally lower cost	       More expensive
 Good for many use cases	    Good for high-throughput/consistent connectivity
 
 A common production design is actually:
@@ -398,16 +403,16 @@ DynamoDB
 
 Architecture:
 
-Private EC2
-     │
-     ▼
-Route Table
-     │
-     ▼
-Gateway Endpoint
-     │
-     ▼
-    S3
+         Private EC2
+              │
+              ▼
+         Route Table
+              │
+              ▼
+         Gateway Endpoint
+              │
+              ▼
+             S3
 
 You configure a route to the endpoint.
 
@@ -417,26 +422,26 @@ Suppose your private EC2 needs to download something from S3.
 
 Without endpoint:
 
-EC2
- │
- ▼
-NAT Gateway
- │
- ▼
-S3
+      EC2
+       │
+       ▼
+      NAT Gateway
+       │
+       ▼
+      S3
 
 With Gateway Endpoint:
 
-EC2
- │
- ▼
-Route Table
- │
- ▼
-S3 Gateway Endpoint
- │
- ▼
-S3
+      EC2
+       │
+       ▼
+      Route Table
+       │
+       ▼
+      S3 Gateway Endpoint
+       │
+       ▼
+      S3
 
 This can reduce NAT Gateway usage and costs.
 
@@ -444,26 +449,26 @@ This can reduce NAT Gateway usage and costs.
     -------------------
 Interface endpoints use:
 
-Elastic Network Interface (ENI)
+      Elastic Network Interface (ENI)
 
 inside your subnet.
 
 Architecture:
 
-Private Subnet
+    Private Subnet
+      
+      EC2
+       │
+       ▼
+      ENI
+       │
+       ▼
+      Interface Endpoint
+       │
+       ▼
+      AWS Service
 
-EC2
- │
- ▼
-ENI
- │
- ▼
-Interface Endpoint
- │
- ▼
-AWS Service
-
-They are powered by AWS PrivateLink.
+They are powered by AWS PrivateLink.   
 
 19. Examples of Interface Endpoints
     -------------------------------
@@ -471,13 +476,13 @@ Many AWS services can be accessed through interface endpoints.
 
 For example:
 
-EC2
-ECR
-CloudWatch
-STS
-Secrets Manager
-SSM
-KMS
+      EC2
+      ECR
+      CloudWatch
+      STS
+      Secrets Manager
+      SSM
+      KMS
 
 The exact services available depends on the AWS region/service support.
 
@@ -489,24 +494,24 @@ Imagine your EKS nodes are in private subnets.
 
 They need:
 
-ECR
-STS
-CloudWatch
-S3
-Secrets Manager
+      ECR
+      STS
+      CloudWatch
+      S3
+      Secrets Manager
 
 Instead of sending everything through NAT Gateway:
 
-EKS Node
-   │
-   ▼
-NAT Gateway
-   │
-   ▼
-Internet
-   │
-   ▼
-AWS Service
+      EKS Node
+         │
+         ▼
+      NAT Gateway
+         │
+         ▼
+      Internet
+         │
+         ▼
+      AWS Service
 
 you can use VPC endpoints:
 
@@ -525,11 +530,11 @@ This is a very useful production networking pattern.
     -------------------------------
 Gateway Endpoint	Interface Endpoint
 --------------------------------------
-S3, DynamoDB	                 Many AWS services
-Uses route tables	             Uses ENI
-No hourly endpoint charge	     Hourly/data processing charges generally apply
+S3, DynamoDB	                  Many AWS services
+Uses route tables	               Uses ENI
+No hourly endpoint charge	       Hourly/data processing charges generally apply
 Doesn't use PrivateLink	Uses     AWS PrivateLink
-Simple routing	                 DNS/ENI-based access
+Simple routing	                   DNS/ENI-based access
 
 
 23. Complete Day 5 Picture
