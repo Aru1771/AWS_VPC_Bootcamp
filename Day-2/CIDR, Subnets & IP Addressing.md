@@ -5,16 +5,16 @@ CIDR, Subnets & IP Addressing
 ---------
 By the end of today, you'll understand:
 
-What is CIDR?
-CIDR Notation
-Network ID
-Host ID
-Subnet Mask
-Public vs Private Subnets
-AWS Reserved IP Addresses
-Subnet Sizing
-Production Best Practices
-Interview Questions
+              What is CIDR?
+              CIDR Notation
+              Network ID
+              Host ID
+              Subnet Mask
+              Public vs Private Subnets
+              AWS Reserved IP Addresses
+              Subnet Sizing
+              Production Best Practices
+              Interview Questions
 
 
 
