@@ -5,15 +5,15 @@
 ---------
 By the end of today, you'll understand:
 
-What is an Internet Gateway (IGW)?
-What is a Route Table?
-What is a Public Subnet?
-What is a Private Subnet?
-What is an Elastic IP (EIP)?
-What is a NAT Gateway?
-Complete Internet Traffic Flow
-Production Architecture
-Hands-on Implementation
+              What is an Internet Gateway (IGW)?
+              What is a Route Table?
+              What is a Public Subnet?
+              What is a Private Subnet?
+              What is an Elastic IP (EIP)?
+              What is a NAT Gateway?
+              Complete Internet Traffic Flow
+              Production Architecture
+              Hands-on Implementation
 
 Step 1: We Already Have a VPC
 ---------------------------------
@@ -22,32 +22,32 @@ From Day 2, we created:
 VPC
 10.0.0.0/16
 
-│
-├── Public Subnet A
-│      10.0.1.0/24
-│
-├── Public Subnet B
-│      10.0.2.0/24
-│
-├── Private App A
-│      10.0.11.0/24
-│
-├── Private App B
-│      10.0.12.0/24
-│
-├── Private DB A
-│      10.0.21.0/24
-│
-└── Private DB B
-       10.0.22.0/24
+              │
+              ├── Public Subnet A
+              │      10.0.1.0/24
+              │
+              ├── Public Subnet B
+              │      10.0.2.0/24
+              │
+              ├── Private App A
+              │      10.0.11.0/24
+              │
+              ├── Private App B
+              │      10.0.12.0/24
+              │
+              ├── Private DB A
+              │      10.0.21.0/24
+              │
+              └── Private DB B
+                     10.0.22.0/24
 
 Question:
 
 Can these EC2 instances access the Internet?
 
-Answer: ❌ No.
+       Answer: ❌ No.
 
-Because the VPC is isolated by default.
+Because the VPC is isolated by default. 
 
 Step 2: What is an Internet Gateway (IGW)?
 ----------------------------------------------
@@ -55,31 +55,31 @@ An Internet Gateway is a managed AWS service that connects your VPC to the publi
 
 Think of it like the main gate of your house.
 
-Your House
-
-↓
-
-Main Gate
-
-↓
-
-Road
-
-↓
-
-World
+              Your House
+              
+              ↓
+              
+              Main Gate
+              
+              ↓
+              
+              Road
+              
+              ↓
+              
+              World
 
 Similarly:
 
-VPC
-
-↓
-
-Internet Gateway
-
-↓
-
-Internet
+              VPC
+              
+              ↓
+              
+              Internet Gateway
+              
+              ↓
+              
+              Internet
 
 Without an IGW:
 
@@ -97,13 +97,13 @@ Attach it to the VPC.
 
 Architecture:
 
-Internet
-     │
-     ▼
-Internet Gateway
-     │
-     ▼
-VPC
+              Internet
+                   │
+                   ▼
+              Internet Gateway
+                   │
+                   ▼
+              VPC
 
 Important:
 
@@ -121,11 +121,11 @@ It tells AWS:
 
 Example:
 
-Destination        Target
-
-10.0.0.0/16       Local
-
-0.0.0.0/0         Internet Gateway
+              Destination        Target
+              
+              10.0.0.0/16       Local
+              
+              0.0.0.0/0         Internet Gateway
 
 Meaning:
 
@@ -147,14 +147,14 @@ Step 5: Public Route Table
 ----------------------------
 Example:
 
-Destination	Target
-10.0.0.0/16	Local
-0.0.0.0/0	Internet Gateway
+              Destination	Target
+              10.0.0.0/16	Local
+              0.0.0.0/0	Internet Gateway
 
 Associate this Route Table with:
 
-Public Subnet A
-Public Subnet B
+              Public Subnet A
+              Public Subnet B
 
 Now these subnets become Public Subnets.
 
@@ -162,26 +162,26 @@ Step 6: Public Subnet Traffic Flow
 ----------------------------------
 Suppose a user opens:
 
-https://app.company.com
+       https://app.company.com
 
 Flow:
 
-Internet User
-      │
-      ▼
-Internet
-      │
-      ▼
-Internet Gateway
-      │
-      ▼
-Public Route Table
-      │
-      ▼
-Public Subnet
-      │
-      ▼
-Application Load Balancer
+              Internet User
+                    │
+                    ▼
+              Internet
+                    │
+                    ▼
+              Internet Gateway
+                    │
+                    ▼
+              Public Route Table
+                    │
+                    ▼
+              Public Subnet
+                    │
+                    ▼
+              Application Load Balancer
 
 Step 7: What is a Private Subnet?
 -------------------------------------
@@ -189,26 +189,26 @@ A Private Subnet has no route to the Internet Gateway.
 
 Example Route Table:
 
-Destination	Target
-10.0.0.0/16	Local
+       Destination	Target
+       10.0.0.0/16	Local
 
 Notice:
 
 There is no:
 
-0.0.0.0/0 → Internet Gateway
+       0.0.0.0/0 → Internet Gateway
 
 So:
 
-Internet
-
-↓
-
-Cannot Reach
-
-↓
-
-Private EC2
+              Internet
+              
+              ↓
+              
+              Cannot Reach
+              
+              ↓
+              
+              Private EC2
 
 Step 8: Problem
 -------------------
@@ -216,10 +216,10 @@ Suppose your Spring Boot application is in a private subnet.
 
 It needs to:
 
-Download Maven dependencies
-Install OS updates
-Pull Docker images
-Access AWS APIs
+       Download Maven dependencies
+       Install OS updates
+       Pull Docker images
+       Access AWS APIs
 
 How will it access the Internet?
 
@@ -244,27 +244,27 @@ It also requires an Elastic IP (EIP).
 
 Architecture:
 
-Internet
-
-↓
-
-Internet Gateway
-
-↓
-
-Public Subnet
-
-↓
-
-NAT Gateway (Elastic IP)
-
-↓
-
-Private Subnet
-
-↓
-
-Spring Boot EC2
+              Internet
+              
+              ↓
+              
+              Internet Gateway
+              
+              ↓
+              
+              Public Subnet
+              
+              ↓
+              
+              NAT Gateway (Elastic IP)
+              
+              ↓
+              
+              Private Subnet
+              
+              ↓
+              
+              Spring Boot EC2
 
 
 Step 11: What is an Elastic IP?
@@ -318,49 +318,51 @@ Private App B
 Step 13: Complete Traffic Flow
 -------------------------------
 Inbound Traffic
-User
-
-↓
-
-Internet
-
-↓
-
-Internet Gateway
-
-↓
-
-Public Route Table
-
-↓
-
-Public ALB
-
-↓
-
-Private App
-
-↓
-
-Database
+       User
+       
+       ↓
+       
+       Internet
+       
+       ↓
+       
+       Internet Gateway
+       
+       ↓
+       
+       Public Route Table
+       
+       ↓
+       
+       Public ALB
+       
+       ↓
+       
+       Private App
+       
+       ↓
+       
+       Database
+       
 Outbound Traffic from Private App
-Spring Boot EC2
 
-↓
-
-Private Route Table
-
-↓
-
-NAT Gateway
-
-↓
-
-Internet Gateway
-
-↓
-
-Internet
+              Spring Boot EC2
+              
+              ↓
+              
+              Private Route Table
+              
+              ↓
+              
+              NAT Gateway
+              
+              ↓
+              
+              Internet Gateway
+              
+              ↓
+              
+              Internet
 
 Notice:
 
@@ -483,6 +485,7 @@ No. A subnet becomes public only when:
 It has a route (0.0.0.0/0) pointing to the Internet Gateway.
 The instance has a public IP (or Elastic IP if applicable).
 Security Groups and Network ACLs allow the traffic.
+
 Q3. Why is a NAT Gateway used?
 
 Answer:
