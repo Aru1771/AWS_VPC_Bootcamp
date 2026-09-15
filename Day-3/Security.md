@@ -416,16 +416,16 @@ Therefore, the NACL needs to allow the appropriate return traffic.
 
 15. Security Group vs NACL
     ------------------------
-    | Feature         | Security Group                                   | NACL                          |
-| --------------- | ------------------------------------------------ | ----------------------------- |
-| Scope           | Resource                                         | Subnet                        |
-| Rules           | Allow                                            | Allow + Deny                  |
-| Stateful?       | ✅ Yes                                            | ❌ No                          |
-| Rule evaluation | All applicable rules                             | Lowest numbered rule first    |
-| Explicit deny   | ❌ No                                             | ✅ Yes                         |
-| Return traffic  | Automatically allowed for established connection | Must be explicitly allowed    |
-| Common use      | Protect EC2/ALB/RDS                              | Subnet-level boundary/control |
-
+                | Feature         | Security Group                                   | NACL                          |
+            | --------------- | ------------------------------------------------ | ----------------------------- |
+            | Scope           | Resource                                         | Subnet                        |
+            | Rules           | Allow                                            | Allow + Deny                  |
+            | Stateful?       | ✅ Yes                                            | ❌ No                          |
+            | Rule evaluation | All applicable rules                             | Lowest numbered rule first    |
+            | Explicit deny   | ❌ No                                             | ✅ Yes                         |
+            | Return traffic  | Automatically allowed for established connection | Must be explicitly allowed    |
+            | Common use      | Protect EC2/ALB/RDS                              | Subnet-level boundary/control |
+            
 
 16. Security Group Referencing
      ------------------------
