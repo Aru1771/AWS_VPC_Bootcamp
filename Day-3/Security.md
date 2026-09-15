@@ -429,58 +429,61 @@ Therefore, the NACL needs to allow the appropriate return traffic.
 
 16. Security Group Referencing
      ------------------------
-    This is one of the most useful AWS concepts.
+This is one of the most useful AWS concepts.
 
 Suppose you have:
 
-Internet
-   |
-   v
-ALB
-   |
-   v
-EC2
-   |
-   v
-RDS
+      Internet
+         |
+         v
+      ALB
+         |
+         v
+      EC2
+         |
+         v
+      RDS
 
 Don't do this:
 
 EC2 SG:
-ALLOW 8080 from 0.0.0.0/0
+-------
+      ALLOW 8080 from 0.0.0.0/0
 
 That's dangerous.
 
 Instead, create separate Security Groups:
 
-ALB-SG
-APP-SG
-DB-SG
+      ALB-SG
+      APP-SG
+      DB-SG
 
 17. ALB → Application
     -----------------
 ALB Security Group:
 
-ALB-SG
+      ALB-SG
 
 Inbound:
-443 from Internet
+
+      443 from Internet
 
 Application Security Group:
 
-APP-SG
+APP-SG:
 
 Inbound:
-8080 from ALB-SG
+
+      8080 from ALB-SG
 
 Notice:
 
-APP-SG
-  |
-  | Allow 8080
-  | from
-  v
-ALB-SG
+      APP-SG
+        |
+        | Allow 8080
+        | from
+        v
+      ALB-SG
 
 We are referencing the Security Group, not an IP address.
 
@@ -490,9 +493,9 @@ Without SG reference:
 
 APP-SG
 
-ALLOW 8080
-from:
-10.0.1.0/24
+      ALLOW 8080
+      from:
+      10.0.1.0/24
 
 You're trusting an entire subnet.
 
@@ -500,9 +503,9 @@ With SG reference:
 
 APP-SG
 
-ALLOW 8080
-from:
-ALB-SG
+      ALLOW 8080
+      from:
+      ALB-SG
 
 Meaning:
 
@@ -513,29 +516,29 @@ That's much cleaner.
 19. Application → Database
     -----------------------
 
-    Now suppose:
+Now suppose:
 
-ALB
- |
- v
-Application
- |
- v
-RDS
+      ALB
+       |
+       v
+      Application
+       |
+       v
+      RDS
 
 Application listens on:
 
-8080
+      8080
 
 RDS MySQL listens on:
 
-3306
+      3306
 
 We create:
 
-ALB-SG
-APP-SG
-DB-SG
+      ALB-SG
+      APP-SG
+      DB-SG
 
 Rules:
 
@@ -579,8 +582,8 @@ Bad:
 
 DB-SG
 
-3306
-0.0.0.0/0
+      3306
+      0.0.0.0/0
 
 This potentially exposes MySQL to the Internet.
 
@@ -588,8 +591,8 @@ Instead:
 
 DB-SG
 
-3306
-Source = APP-SG
+      3306
+      Source = APP-SG
 
 Now:
 
@@ -606,10 +609,11 @@ Only allow what is actually required.
 
 21. Production Security Design
     -----------------------------
-     Now let's combine everything.
+ Now let's combine everything.
 
-     A common production architecture:
-                        INTERNET
+A common production architecture:
+
+                     INTERNET
                        |
                        v
                 Internet Gateway
