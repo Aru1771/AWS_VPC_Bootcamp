@@ -337,19 +337,20 @@ PrivateLink provides private access to a specific service without requiring full
 
 13. Easy Difference
     ----------------
-VPC Peering
-VPC A  ←────────→  VPC B
-
-Network-to-network connectivity.
-
-PrivateLink
-VPC A
-  │
-  │
-  ▼
-Specific Service
-
-Service-to-consumer connectivity.
+    
+         VPC Peering
+         VPC A  ←────────→  VPC B
+         
+         Network-to-network connectivity.
+         
+         PrivateLink
+         VPC A
+           │
+           │
+           ▼
+         Specific Service
+         
+         Service-to-consumer connectivity.
 
 14. VPC Endpoints
     -------------
@@ -359,28 +360,28 @@ Amazon S3
 
 Without a VPC endpoint:
 
-Private EC2
-    │
-    ▼
-NAT Gateway
-    │
-    ▼
-Internet
-    │
-    ▼
-S3
+      Private EC2
+          │
+          ▼
+      NAT Gateway
+          │
+          ▼
+      Internet
+          │
+          ▼
+      S3
 
 But AWS provides VPC Endpoints.
 
 Then:
 
-Private EC2
-    │
-    ▼
-VPC Endpoint
-    │
-    ▼
-S3
+      Private EC2
+          │
+          ▼
+      VPC Endpoint
+          │
+          ▼
+      S3
 
 Traffic can stay within the AWS network instead of requiring a NAT Gateway for that service.
 
@@ -388,18 +389,18 @@ Traffic can stay within the AWS network instead of requiring a NAT Gateway for t
     -------------------
 There are two main types you need to know:
 
-VPC Endpoint
-│
-├── Gateway Endpoint
-│
-└── Interface Endpoint
+      VPC Endpoint
+      │
+      ├── Gateway Endpoint
+      │
+      └── Interface Endpoint
 
 16. Gateway Endpoint
     ----------------
 Gateway endpoints are used for:
 
-S3
-DynamoDB
+      S3
+      DynamoDB
 
 Architecture:
 
@@ -528,8 +529,8 @@ This is a very useful production networking pattern.
 
 21. Gateway vs Interface Endpoint
     -------------------------------
-Gateway Endpoint	Interface Endpoint
---------------------------------------
+Gateway Endpoint          	Interface Endpoint
+-----------------           ---------------------
 S3, DynamoDB	                  Many AWS services
 Uses route tables	               Uses ENI
 No hourly endpoint charge	       Hourly/data processing charges generally apply
