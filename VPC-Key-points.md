@@ -65,4 +65,12 @@ DHCP service in vpc:
   Subnet level imp:
 
        we have to enable auto-assign public ip to assing ip's to ec2 at subnet level.
-       
+
+
+My Project CIDR ranges:
+
+        10.100.0.0/16 --- dev
+        10.120.0.0/16 -- stage
+        10.140.0.0/16 -- prod
+
+
