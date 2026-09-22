@@ -74,3 +74,19 @@ My Project CIDR ranges:
         10.140.0.0/16 -- prod
 
 
+we can add more than one CIDR block:
+-------------------------------------
+
+        if required we can add more then one cidr block but the sequence is same.
+        like fiest cidr is 172.31.0.0\16
+        the second cider is like 172.34.0.0.\16
+
+If we create a VPC what are the default things we will get:
+--------------------------------------------------------------
+
+       1. default route table
+       2. default NACL
+       3. default security group
+
+one IGW we can attch to one VPC:
+--------------------------------
