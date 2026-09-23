@@ -153,4 +153,5 @@ for public subnets we have to enable auto-assign Ip address Option
 once we attach the subnets to custome route tables those subnets will automatically deattach from the default route table
 -
 
-
+in real world we always confidence space we have upload our VPC cidr blocks. if any one creating new VPC they will check that and create the VPC cidr block with out overlap with the existing CIDR blocks
+--
