@@ -73,8 +73,8 @@ My Project CIDR ranges:
         10.140.0.0/16 -- prod
 
 
-we can add more than one CIDR block:
--------------------------------------
+we can add more than one CIDR block to our VPC:
+-----------------------------------------------
 
         if required we can add more then one cidr block but the sequence is same.
         like fiest cidr is 172.31.0.0\16
@@ -90,10 +90,10 @@ If we create a VPC what are the default things we will get:
 one IGW we can attch to one VPC:
 --------------------------------
 
-IN realworld we always maintain 2  public, private, app, db subnets for high availability
+IN realworld we always maintain 2 TO 3 public, private, app, db subnets for high availability
 -----------------------------------------------------------------------------------------
 
-       if we created a VPC CIDR BLOCK with 10.100.0.0/16 --it will give 65,000 + IP'S  
+       if we created a VPC CIDR BLOCK with 10.100.0.0/16 --it will give 65,536 + IP'S  
 
        Now if you are creating the subnets first two values will be same "10.100" for the subnets cidr blocks.
 
@@ -135,6 +135,22 @@ Once we created the Subnet we can't modify the CIDR range
 -----------------------------------------------------------
       
 
-       
+VPC Is region scoped if you create a vpc in specific region the vpc only available in that region only
+--------------------------------------------------------------------------------------------------------
+
+VPC CIDR range always in b/w the \16 to \18
+---------------------------------------------
+
+       if you take less than 16 we will get more than 65,536 Ip address.
+       if you take more than 28 we will get very less Ip address
+
+If you create any subnet in vpc it will attached to default route table which we get at the time of VPC creation and By default it is attched to default NACL as well.
+-
+
+for public subnets we have to enable auto-assign Ip address Option 
+------------
+
+once we attach the subnets to custome route tables those subnets will automatically deattach from the default route table
+-
 
 
