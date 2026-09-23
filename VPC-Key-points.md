@@ -17,12 +17,12 @@ we used:
 
  public subnet:
 
-        used to host the webserver, bastenhost, Natgateway's, 
+        used to host the front end webserver, bastenhost, Natgateway's, 
 
 
 private subnet:
 
-       used to host backed servers, database servers, internal servers.
+       used to host some backed servers, database servers, internal servers.
 
 
 application subnet:
@@ -30,7 +30,6 @@ application subnet:
        it's same as a privatesubnet but as a origanization level some times we can call it as a app subnet.
 
        used to host EKS clusters, middleware services.
-
 data subnet:
 
 
@@ -42,12 +41,12 @@ data subnet:
 Block ip in every subnet:
 --------------------------
 
-* if you take vpc cidr : 10.0.0.0./16
+* if you take vpc cidr :                        10.0.0.0./16
 
-* in that vpc if i create any subnet like: 10.0.11.0/24 --> subnet 1
+* in that vpc if i create any subnet like:      10.0.11.0/24 --> subnet 1
 * for the second subnet in the same vpc use --> 10.0.12.0/24.
 
-* Never reduce the value you have given in the subnet. if you reduce it will overwrite.
+* Never reduce the value you have given in the subnet. if you reduce it will overlap the cidr blocks.
 
 * Blocked Ip's:
 
@@ -90,3 +89,52 @@ If we create a VPC what are the default things we will get:
 
 one IGW we can attch to one VPC:
 --------------------------------
+
+IN realworld we always maintain 2  public, private, app, db subnets for high availability
+-----------------------------------------------------------------------------------------
+
+       if we created a VPC CIDR BLOCK with 10.100.0.0/16 --it will give 65,000 + IP'S  
+
+       Now if you are creating the subnets first two values will be same "10.100" for the subnets cidr blocks.
+
+       Now we have to define a subnet CIDR block range with the help of CIDR caluculater.
+
+How can we do that ?
+
+
+      My VPC CIDR range is 10.100.0.0/16
+
+      In my vpc now i want to create the Subnet:
+
+      EG: 1 subnet-1 with cidr block -10.100.8.0/24 
+
+      My Subnet-1 CIDR Range:
+                CIDR IP Range
+                10.100.8.0 - 10.100.8.255
+
+     in this case i have no issue i can define my another subnet like 10.100.9.0/24
+
+     But if you are takeing the host range is below /24:
+
+     we have to check the cider range in CIDR caluculater  https://mxtoolbox.com/subnetcalculator.aspx.
+
+     
+       Eg: 2 subnet-2 with cidr block - 10.100.8.0/21
+
+       My Subnet-2 CIDR Range:
+       CIDR IP Range
+       10.100.8.0 - 10.100.15.255
+
+        it starts Ip with 10.100.8 and ends Ip with 10.100.15
+
+        in this case if want to create another subnet we have to take the 10.100.16.0/21
+
+        then it will not overlap the CIDR ranges in our subnets.
+
+Once we created the Subnet we can't modify the CIDR range
+-----------------------------------------------------------
+      
+
+       
+
+
