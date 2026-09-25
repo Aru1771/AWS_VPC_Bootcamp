@@ -64,6 +64,23 @@ AWS NACL
 
 * After creating the NACL all the inbound and outbond is denay only.
 
-* inbound rule number will start from 1 to 32,767. in rule's we always give our client vpn range not 0.0.0.0./0.
+* Inbound rule number will start from 1 to 32,767. in rule's we always give our client vpn range not 0.0.0.0./0.
 
-* 
+* In NACL  we have to allow both indound and outbond rule then only we can access.
+
+* But in the outbond rules we have to give epemeral ports under *CUSTOME TCP* from Port range 1024 - 65535 Destination 0.0.0.0/0(always give CIDR range).
+
+
+ Security groups:
+ ----------------
+
+ * we configure sg at resource level.
+ * Hear we can allow or denay the traffic.
+ * These sg are statefull sets.
+ * sg will only have allow. it will not have denay.
+ * if you allow the request at inbound level no need to allow at outbound level.
+ * in sg if you allow outbound to allow all traffic with 0.0.0.0/0 is not a problem. but we have to takecare on inbound rules.
+ * we can give source in inbound rules alwats custome- with our oraganization cidr range.
+ * for a single instance we will attach multiple security groups.
+ * SG at vpc level. we can't access one vpc sg from other vpc's.
+ * 
