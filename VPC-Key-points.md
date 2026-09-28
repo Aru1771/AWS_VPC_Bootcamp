@@ -155,3 +155,12 @@ once we attach the subnets to custome route tables those subnets will automatica
 
 in real world we always confidence space we have upload our VPC cidr blocks. if any one creating new VPC they will check that and create the VPC cidr block with out overlap with the existing CIDR blocks
 --
+
+If you want to host the private server from the basten-Host/ Public server:
+-----------------------------------------------------------------------------
+* we have to copy the pem file into the server. then for that pem file we have to give 400.
+* How we are connecting private server from public.
+* actually we are in the same VPC. and private route table rule we have a local rule.
+* this local rule tells i will allow the request from this VPC CIDR range.
+* 
+permissions and with the help of CMD: ssh -i key.pem user@private.ip
