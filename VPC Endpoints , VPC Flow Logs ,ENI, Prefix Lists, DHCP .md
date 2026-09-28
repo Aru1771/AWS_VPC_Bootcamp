@@ -15,3 +15,4 @@ There are two types of VPC endpoints:
 2. Gateway Endpoints: These are used to connect directly to services like Amazon S3 and DynamoDB within your VPC, without needing an internet gateway or NAT device.
    By using this we can connect the Amazon S3 and DynamoDB within your VPC.
 
+* If route table have both endpoint and NAT gateway. based up on the access it will choose it will select the end point / nat-gateway.
