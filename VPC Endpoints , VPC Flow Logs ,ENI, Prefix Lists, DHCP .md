@@ -39,3 +39,104 @@ Key Features of VPC Flow Logs:
 * if any issue happed at network level we can see in these vpc flow logs.
 
 * To learn more About it check this page: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
+
+
+Elastic Network Interface (ENI) in AWS
+---------------------------------------
+
+* Elastic Network Interfaces (ENIs) are virtual network interfaces that can be attached to EC2 instances.
+* They are used to manage network traffic, IP addresses, and security group rules.
+
+Key Features of ENIs:
+-
+* Flexible Attachment: Can be attached or detached from instances without stopping them.
+* Multiple IP Addresses: Can have one or more private IP addresses.
+* Security Groups: Can be associated with multiple security groups.
+
+* if i create a EC2 by default one private IP was assigned to the instance. that private IP will create one Network interface by default.
+* if you go to Network interface tab and serch with instance Private IP there you can find one Network interface for the Serched Private IP.
+
+Use case of ENI:
+
+       for eg if i installed a DB server in the ec2. at the time of failover we can use this ENI we can create a multiple private IP addrees to EC2.
+
+How to Create a Netwoek interface:
+
+       Now we can see How to create NI for EC2.
+       1. Go to ---> EC2 ---> search for network interface option in left side controlpanel.
+       2. click on create Network interface.
+       * Description:
+       * subnet: select the subnet where our ec2 was created.
+       * Private IP address: Auto_assign/custome --> if you select custome we can give our VPC cidr range also.
+       * Security Group: select atleast one.
+       3. Click on create NI.
+
+How to attach NI to ec2.
+
+     How we can attch NI to ec2.
+     1. in the NI tab select the NI and go settings---> click on Attach ---> there we have to selet the VPC.
+     2. then we will see the instances from the subnets what we have selected at the time of creating the NI.
+     3. click on Attach
+
+     Now if you see the instance have two Private IP address.
+
+
+Prefix Lists in AWS VPC
+-------------------------
+
+
+* Prefix Lists in AWS VPC are collections of CIDR blocks that you can use to simplify the management of large sets of IP addresses in security groups, route         tables, and other resources that require CIDR blocks.
+  
+* By using prefix lists, you can manage and reference multiple CIDR blocks as a single entity, reducing complexity and the potential for errors.
+
+Key Benefits of Prefix Lists
+-
+* Simplification: Manage multiple CIDR blocks as a single entity, making it easier to maintain and update.
+* Consistency: Ensure consistent CIDR block usage across multiple resources.
+* Scalability: Easily update the list of CIDR blocks without having to update each individual resource.
+
+
+Creating and Using Prefix Lists:
+
+         Step 1: Create a Prefix List
+         Navigate to the VPC Dashboard in the AWS Management Console.
+         
+         Select "Prefix Lists" from the left-hand menu.
+         
+         Click "Create prefix list".
+         
+         Provide the following details:
+         
+         Name: A descriptive name for the prefix list.
+         Description: An optional description for the prefix list.
+         Max entries: The maximum number of CIDR blocks that the prefix list can contain.
+         CIDR blocks: Add the CIDR blocks that you want to include in the prefix list.
+         Click "Create prefix list".
+
+Example
+
+         Name: MyPrefixList
+         Description: List of allowed IP ranges
+         Max entries: 10
+         CIDR blocks:
+           - 192.168.1.0/24
+           - 10.0.0.0/16
+           - 172.16.0.0/12
+
+Step 2: Update Route Tables to Use the Prefix List
+
+            Navigate to Route Tables in the VPC Dashboard.
+            
+            Select the route table you want to update.
+            
+            Click on the "Routes" tab, then click "Edit routes".
+            
+            Add a new route or update an existing route:
+            
+            Destination: Select "Prefix list" and choose your created prefix list from the dropdown.
+            Target: Specify the target for the traffic (e.g., an internet gateway, NAT gateway, or VPC peering connection).
+            Click "Save routes".
+
+
+DHCP Option Set in AWS VPC
+---------------------------
