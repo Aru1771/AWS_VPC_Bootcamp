@@ -270,3 +270,9 @@ For a DevOps engineer, initially remember:
 
 * domain-name-servers specifies the DNS servers that instances should use, while domain-name specifies the domain name used for DNS hostnames.
 
+DNS Hostnames and DNS Resolution in AWS VPC
+---------------------------------------------
+
+* DNS Hostnames: Enable DNS hostnames to assign a DNS name to EC2 instances.
+* DNS Resolution: Allow or disable DNS resolution within your VPC. If enabled, instances can use AWS provided DNS servers.
+
