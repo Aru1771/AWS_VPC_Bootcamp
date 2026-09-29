@@ -140,3 +140,133 @@ Step 2: Update Route Tables to Use the Prefix List
 
 DHCP Option Set in AWS VPC
 ---------------------------
+* DHCP Option Set is a VPC-level configuration that tells EC2 instances which DNS, domain, time, and related network settings to use.
+
+For a DevOps engineer, initially remember:
+
+      DHCP Option Set
+             |
+             +---- DNS Server
+             |
+             +---- Domain Name
+             |
+             +---- NTP Server
+             |
+             +---- NetBIOS settings
+
+* domain-name-servers
+
+      Question: "Which DNS server should I use?"
+      
+      Example:
+      
+      EC2 → DNS server → Find google.com IP
+      
+      In AWS, normally:
+      
+      AmazonProvidedDNS
+      
+      🧠 Remember:
+      
+      DNS = Find the IP
+
+      Example:
+      
+      EC2
+       ↓
+      DHCP Option Set
+       ↓
+      DNS Server = AmazonProvidedDNS
+      
+      When you run:
+      
+      nslookup google.com
+      
+      the EC2 instance sends the DNS request to its configured DNS resolver.
+      
+      Remember:
+      
+      domain-name-servers = WHERE do I ask for DNS?
+
+* domain-name → Domain
+
+      Question: "What domain should I belong to/use?"
+      
+      Example:
+      
+      example.com
+      
+      It helps build hostnames.
+      
+      🧠 Remember:
+      
+      Domain = My network's name
+
+      For example:
+      
+      domain-name = example.com
+      
+      An EC2 hostname can then be associated with that domain.
+      
+      Remember:
+      
+      domain-name = WHAT is my domain?
+
+
+* ntp-servers → Time
+
+      Question: "Where can I get the correct time?"
+      
+      NTP = Network Time Protocol.
+      
+      Example:
+      
+      EC2 → NTP Server → Correct time
+      
+      Why important?
+      
+      Things like logs, certificates, authentication, and distributed systems often depend on correct time.
+      
+      🧠 Remember:
+      
+      NTP = Correct time
+
+* netbios-name-servers → NetBIOS Server
+
+      This is mainly related to older Windows networking.
+      
+      It tells the machine:
+      
+      "Which server should I ask for NetBIOS names?"
+      
+      **You don't need to focus heavily on this for normal AWS DevOps work.**
+      
+      🧠 Remember:
+      
+      NetBIOS server = Windows name lookup
+
+* netbios-node-type → Communication method
+
+      This tells the machine:
+      
+      "How should I find other NetBIOS machines?"
+      
+      There are different types:
+      
+      1 = B-node
+      2 = P-node
+      4 = M-node
+      8 = H-node
+      
+      For now, don't memorize these numbers.
+      
+      Just remember:
+      
+      NetBIOS node type = How NetBIOS communicates
+
+* DNS finds names, Domain identifies, NTP gives time, NetBIOS finds Windows machines, Node Type tells how
+
+* For your AWS DevOps learning, focus strongly on domain-name-servers and domain-name first.
+
+* domain-name-servers specifies the DNS servers that instances should use, while domain-name specifies the domain name used for DNS hostnames.
+
