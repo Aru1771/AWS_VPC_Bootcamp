@@ -47,6 +47,42 @@ AWS VPC:
         10.120.0.0/16 -- stage
         10.140.0.0/16 -- prod
 
+* What is CIDR:
+
+      CIDR means: CLassless-inter Domine Routings.
+      CIDR is a mentiod for allocating the IP addresses and for ip routing
+
+       If i took 10.100.0.0/16 as a CIDR:
+
+       we have to devide that in to three parts:
+
+       10.100.0.0 ---> is the IP address
+       / --> slash
+       16 --> Decimal Number
+
+       Combination of (/) slash and (16) Decimal Number will called it as Subnet Mask
+
+* IP address is the 32 bit number that qniquely identify the a host on a tcp ip network.
+
+       IPV4 Ip has 4 bytes in that 4 bytes each byte contains 8 bits so total we have 32 bits.
+
+       how we can calculate it ?
+        
+       Eg: 192.168.0.1
+       
+       every byte is separated by (.)
+       
+       --------.--------.--------.--------
+       
+       8 bits  | 8 bits  | 8 bits  | 8 bits 
+
+        Take one byte as eg:
+  
+        1     1    0    0     0   0    0    0 ---> this is the total 8 bits i have in that single byte
+        -     -    -    -     -   -    -    - 
+       2po7 2po6 2po5 2po4 2po3 2po2 2po1 2po0  -----> the value is 192 = in this byte i have to calculate the bit which have the value 1 we can ignore 0 so for 1         we have 2po7 and 2po6. 
+
+
 Aws VPC- Subnets:
 -----------------
 
@@ -162,3 +198,19 @@ How can we do that ?
         actually we are in the same VPC. and private route table rule we have a local rule.
         this local rule tells i will allow the request from this VPC CIDR range.
         permissions and with the help of CMD: ssh -i key.pem user@private.ip
+
+
+AWS VPC-SG
+-----------
+
+* we configure sg at resource level.
+* Hear we can allow or denay the traffic.
+* These sg are statefull sets.
+* sg will only have allow. it will not have denay.
+* if you allow the request at inbound level no need to allow at outbound level because it uses Connection Tracking Mechanism.
+* Sg use this Connection Tracking to track information about traffic to and from the instance.
+* Sg name must be unique.
+* in sg if you allow outbound to allow all traffic with 0.0.0.0/0 is not a problem. but we have to takecare on inbound rules.
+* we can give source in inbound rules always custome- with our oraganization cidr range.
+* for a single instance we will attach multiple security groups.
+* SG at vpc level. we can't access one vpc sg from other vpc's.
