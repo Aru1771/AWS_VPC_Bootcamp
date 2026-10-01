@@ -47,8 +47,8 @@ AWS VPC:
         10.120.0.0/16 -- stage
         10.140.0.0/16 -- prod
 
-Subnets in real world:
-------------------------
+Aws VPC- Subnets:
+-----------------
 
 we used:
 
@@ -99,24 +99,12 @@ Block ip in every subnet:
       10.255.255.255 --> brod cast 
 
 
-  Subnet level imp:
+* Subnet level imp:
 
        we have to enable auto-assign public ip to assing ip's to ec2 at subnet level.
 
 
-
-
-
-
-
-
-
-one IGW we can attch to one VPC
--------------------------------
-
-
-IN realworld we always maintain 2 TO 3 public, private, app, db subnets for high availability
------------------------------------------------------------------------------------------
+* IN realworld we always maintain 2 TO 3 public, private, app, db subnets for high availability
 
        if we created a VPC CIDR BLOCK with 10.100.0.0/16 --it will give 65,536 + IP'S  
 
@@ -158,28 +146,19 @@ How can we do that ?
 
 * Once we created the Subnet we can't modify the CIDR range
 
-      
+* If you create any subnet in vpc it will attached to default route table which we get at the time of VPC creation and By default it is attched to default NACL as    well.
 
 
+* for public subnets we have to enable auto-assign Ip address Option 
 
 
-If you create any subnet in vpc it will attached to default route table which we get at the time of VPC creation and By default it is attched to default NACL as well.
+* once we attach the subnets to custome route tables those subnets will automatically deattach from the default route table
 
 
-for public subnets we have to enable auto-assign Ip address Option 
-------------
-
-once we attach the subnets to custome route tables those subnets will automatically deattach from the default route table
--
-
-
-
-
-If you want to host the private server from the basten-Host/ Public server:
------------------------------------------------------------------------------
-* we have to copy the pem file into the server. then for that pem file we have to give 400.
-* How we are connecting private server from public.
-* actually we are in the same VPC. and private route table rule we have a local rule.
-* this local rule tells i will allow the request from this VPC CIDR range.
-* 
-permissions and with the help of CMD: ssh -i key.pem user@private.ip
+* If you want to host the private server from the basten-Host/ Public server:
+  
+        we have to copy the pem file into the server. then for that pem file we have to give 400.
+        How we are connecting private server from public.
+        actually we are in the same VPC. and private route table rule we have a local rule.
+        this local rule tells i will allow the request from this VPC CIDR range.
+        permissions and with the help of CMD: ssh -i key.pem user@private.ip
