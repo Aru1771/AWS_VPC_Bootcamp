@@ -92,6 +92,7 @@ we used:
     private subnet
     application subnet
     data subnet
+    vpn-only-subnets
 
  public subnet:
 
@@ -214,3 +215,50 @@ AWS VPC-SG
 * we can give source in inbound rules always custome- with our oraganization cidr range.
 * for a single instance we will attach multiple security groups.
 * SG at vpc level. we can't access one vpc sg from other vpc's.
+
+
+AWS Route Table:
+-----------------
+
+Route Table = Traffic Map  
+
+* It’s just a list of rules telling your VPC traffic where to go.
+
+Each Route = Destination + Target
+
+* Destination = “Where?” (like 0.0.0.0/0 → the whole internet) from where the traffic is comming
+
+* Target = “How?” (like IGW → Internet Gateway) via which resource the traffic is comming
+
+Local Route Always Exists  
+
+* Every VPC automatically knows how to talk inside itself (10.0.0.0/16 → LOCAL). You can’t delete this.
+
+Main Route Table = Default Map  
+
+* If a subnet doesn’t have its own route table, it follows the main one.
+
+
+Main Route Table exists by default  
+
+       Every VPC automatically has one main route table.
+
+Controls routing for subnets without custom tables  
+
+       If a subnet doesn’t have its own route table, it follows the main one.
+
+You can edit routes in the main table  
+
+       Add, remove, or modify routes — but the local route (inside VPC) is always there.
+
+Local route cannot be overridden  
+
+       You can’t create a more specific route than the default local route.
+
+Main route table cannot be deleted  
+
+       It’s permanent, but you can replace it with a custom one.
+
+Gateway route tables cannot be set as main  
+
+       Internet Gateway or Virtual Private Gateway route tables are separate and can’t become the main.
