@@ -83,6 +83,253 @@ AWS VPC:
        2po7 2po6 2po5 2po4 2po3 2po2 2po1 2po0  -----> the value is 192 = in this byte i have to calculate the bit which have the value 1 we can ignore 0 so for 1         we have 2po7 and 2po6. 
 
 
+CIDR-Tables to remember:
+
+Most important CIDR cheat sheet:
+              
+              | CIDR | Host bits | Total IPs | Equivalent /24s |
+              |---|---:|---:     |------------:|------------------
+              | `/16`  | 16      | 65,536    | 256 |
+              | `/17` | 15       | 32,768    | 128 |
+              | `/18` | 14       | 16,384    | 64 |
+              | `/19` | 13       | 8,192     | 32 |
+              | `/20` | 12       | 4,096     | 16 |
+              | `/21` | 11       | 2,048     | 8 |
+              | `/22` | 10       | 1,024     | 4 |
+              | `/23` | 9        | 512       | 2 |
+              | `/24` | 8        | 256       | 1 |
+              | `/25` | 7        | 128       | 1/2 |
+              | `/26` | 6        | 64        | 1/4 |
+              | `/27` | 5        | 32        | 1/8 |
+              | `/28` | 4        | 16        | 1/16 |
+              | `/29` | 3        | 8         | 1/32 |
+              | `/30` | 2        | 4         | 1/64 |
+
+How we caluculate the Total IP addresses of CIDR:
+
+      Total IP addresses = 2^(32 - CIDR) 
+
+      if my cidr is 10.0.0.0/16 ---> 32-16 = 16 ---> 2^16 = 65536
+
+⭐ Memorize this part:
+
+             /16 = 65,536
+              /20 = 4,096
+              /21 = 2,048
+              /22 = 1,024
+              /23 = 512
+              /24 = 256
+              /25 = 128
+              /26 = 64
+              /27 = 32
+              /28 = 16
+
+After /24, each increase in the prefix halves the IP count.
+
+              /24 → 256
+              /25 → 128
+              /26 → 64
+              /27 → 32
+              /28 → 16
+
+The most useful AWS subnet table:
+
+       | CIDR | Total IPs | AWS usable IPs* |
+       |---|---:          |---:             |
+       | `/16` | 65,536   | 65,531 |
+       | `/20` | 4,096    | 4,091 |
+       | `/21` | 2,048    | 2,043 |
+       | `/22` | 1,024    | 1,019 |
+       | `/23` | 512      | 507 |
+       | `/24` | 256      | 251 |
+       | `/25` | 128      | 123 |
+       | `/26` | 64       | 59 |
+       | `/27` | 32       | 27 |
+       | `/28` | 16       | 11 |
+*AWS reserves 5 addresses in each subnet.
+
+
+/24 is your easiest reference point: 
+
+This is the trick I recommend for you.
+
+Memorize:
+
+       10.0.1.0/24
+
+means:
+
+       10.0.1.0
+               ↓
+       10.0.1.255
+
+
+/23:
+Two /24s:
+
+       10.0.2.0/23
+       
+       10.0.2.0/24
+       +
+       10.0.3.0/24
+Range:
+
+       10.0.2.0 → 10.0.3.255
+
+/22:
+Four /24s:
+
+       10.0.4.0/22
+       
+       10.0.4.0/24
+       10.0.5.0/24
+       10.0.6.0/24
+       10.0.7.0/24
+Range:
+
+       10.0.4.0 → 10.0.7.255
+
+/21
+Eight /24s:
+
+       10.0.8.0/21
+       
+       10.0.8.0/24
+       10.0.9.0/24
+       10.0.10.0/24
+       10.0.11.0/24
+       10.0.12.0/24
+       10.0.13.0/24
+       10.0.14.0/24
+       10.0.15.0/24
+
+Range:
+
+       10.0.8.0 → 10.0.15.255
+
+Subnet boundary trick ⭐:
+
+       | CIDR | Increment in 3rd octet |
+       |---    |---                    :|
+       | `/16` | 1 |
+       | `/17` | 128 in 3rd?* |
+       | `/18` | 64 |
+       | `/19` | 32 |
+       | `/20` | 16 |
+       | `/21` | 8 |
+       | `/22` | 4 |
+       | `/23` | 2 |
+       | `/24` | 1 |
+
+For the common /20–/24 range:
+
+
+       /20 → increments of 16
+       /21 → increments of 8
+       /22 → increments of 4
+       /23 → increments of 2
+       /24 → increments of 1
+
+So:
+
+       10.0.2.0/23  ✅
+       10.0.4.0/22  ✅
+       10.0.8.0/21  ✅
+       10.0.16.0/20 ✅
+
+But:
+
+       10.0.3.0/23  ❌
+because /23 boundaries are:
+
+       10.0.0.0/23
+       10.0.2.0/23
+       10.0.4.0/23
+       10.0.6.0/23
+       ...
+
+Private VPC CIDR ranges ⭐:
+
+For AWS VPCs, remember the three RFC 1918 private ranges:       
+
+
+       10.0.0.0/8
+       172.16.0.0/12
+       192.168.0.0/16
+
+
+Examples:
+
+       10.0.0.0/16        ✅
+       172.16.0.0/16      ✅
+       192.168.1.0/24     ✅
+
+These are private IP ranges.
+
+VPC → Subnet hierarchy:
+
+Think like this:
+
+       VPC
+       │
+       ├── 10.0.0.0/16
+       │
+       ├── Public Subnet
+       │   └── 10.0.1.0/24
+       │
+       ├── Public Subnet
+       │   └── 10.0.2.0/24
+       │
+       ├── Private Subnet
+       │   └── 10.0.3.0/24
+       │
+       └── Private Subnet
+           └── 10.0.4.0/24
+
+The subnet must be inside the VPC CIDR and subnet CIDRs cannot overlap.
+
+For example:
+
+       VPC:        10.0.0.0/16
+       
+       Subnet 1:   10.0.1.0/24  ✅
+       Subnet 2:   10.0.2.0/24  ✅
+       Subnet 3:   10.0.3.0/24  ✅
+
+But:
+
+       Subnet 1:   10.0.1.0/24
+       Subnet 2:   10.0.1.128/25  ❌
+
+because the second subnet is inside the first one.
+
+🧠 Your interview cheat sheet
+
+If you're preparing for AWS/DevOps interviews, remember these 7 things:
+
+       1. IPv4 = 32 bits
+       
+       2. Total IPs = 2^(32 - prefix)
+       
+       3. /24 = 256 IPs
+       
+       4. Smaller prefix = bigger network
+          /23 > /24 > /25
+       
+       5. /23 = 2 × /24
+          /22 = 4 × /24
+          /21 = 8 × /24
+          /20 = 16 × /24
+       
+       6. Private ranges:
+          10.0.0.0/8
+          172.16.0.0/12
+          192.168.0.0/16
+       
+       7. AWS subnets cannot overlap.
+
+
+
 Aws VPC- Subnets:
 -----------------
 
