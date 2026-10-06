@@ -509,3 +509,28 @@ Main route table cannot be deleted
 Gateway route tables cannot be set as main  
 
        Internet Gateway or Virtual Private Gateway route tables are separate and can’t become the main.
+
+
+
+
+
+AWS NAT Gateway
+-----------------
+
+* we use AWS NAT gateway to provide internet access to our private subnet instances.
+
+* which don't have the direct access to internet.
+
+              | Source IP     | Destination IP | Source Port | Destination Port | Source IP Translated |
+              |               |-               |--          -|               ---|-                   --|
+              | `192.138.0.3` | `47.12.22.3`   | `53600/TCP` | `80/TCP`         | `32.35.12.22`        |
+              | `192.138.0.4` | `47.12.22.3`   | `53601/TCP` | `80/TCP`         | `32.35.12.22`        |
+              | `192.138.0.5` | `47.12.22.3`   | `53602/TCP` | `80/TCP`         | `32.35.12.22`        |
+
+# How to remember it
+
+              Internal Client              NAT/Public IP             Web Server
+              
+              192.138.0.3:53600  ───────► 32.35.12.22:53600 ─────► 47.12.22.3:80
+              192.138.0.4:53601  ───────► 32.35.12.22:53601 ─────► 47.12.22.3:80
+              192.138.0.5:53602  ───────► 32.35.12.22:53602 ─────► 47.12.22.3:80
