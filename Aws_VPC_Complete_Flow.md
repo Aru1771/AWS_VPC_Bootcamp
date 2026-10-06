@@ -527,7 +527,7 @@ AWS NAT Gateway
               | `192.138.0.4` | `47.12.22.3`   | `53601/TCP` | `80/TCP`         | `32.35.12.22`        |
               | `192.138.0.5` | `47.12.22.3`   | `53602/TCP` | `80/TCP`         | `32.35.12.22`        |
 
-# How to remember it
+ How to remember it:
 
               Internal Client              NAT/Public IP             Web Server
               
