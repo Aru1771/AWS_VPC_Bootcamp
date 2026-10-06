@@ -518,10 +518,42 @@ AWS NAT Gateway
 -----------------
 
 * we use AWS NAT gateway to provide internet access to our private subnet instances.
+  1. for software updates.
+  2. for using other aws services.
+  3. forwards treaffic from the instance in the private subnet to the internet or the other aws services.
+  4. sends the responce back to the instance.
+ 
+* AWS offers diff kind of NAT devices.
+
+  1. NAT Gateway
+  2. NAT instance
+
+* Aws recomended NAT gateway for better availability.
+
+* Nat gateway is chargeble service in aws.
+
+* AWS charge based on two thingd hourly useage of NAT Gateway and per GB data processing by the NAT gateway.
 
 * which don't have the direct access to internet.
 
-              | Source IP     | Destination IP | Source Port | Destination Port | Source IP Translated |
+* NAT Gateway are not supported to IPV6 treaffic.
+
+* Evry time create the NAT Gateway in the same AZ so the resources in the same AZ use this NAT Gateway.
+
+ NAT Gateway limitations and Rules:
+
+               1. we can assign only one Elastic IP address with NAT Gateway.
+               2. we cannot disassociate an Elastic IP address from the NAT Gateway once it was created.
+               3. NAT Gateway supports the following Gateways UDP, TCP and ICMP.
+               4. we can not associate the security groups to NAT Gateway.
+               5. we can use NACL to control the traffic from and to the subnet.Network ACLs act like a filter at the subnet’s door, deciding which traffic is                       allowed to reach the NAT Gateway and which is blocked.
+               6. You cannot send traffic to a NAT Gateway through:VPC Peering (connecting two VPCs), Site-to-Site VPN (on-prem to AWS),  Connect (dedicated AWS                     link)
+
+
+Table over view of NAT Gatewat:
+
+
+               | Source IP     | Destination IP | Source Port | Destination Port | Source IP Translated |
               |               |-               |--          -|               ---|-                   --|
               | `192.138.0.3` | `47.12.22.3`   | `53600/TCP` | `80/TCP`         | `32.35.12.22`        |
               | `192.138.0.4` | `47.12.22.3`   | `53601/TCP` | `80/TCP`         | `32.35.12.22`        |
@@ -534,3 +566,39 @@ AWS NAT Gateway
               192.138.0.3:53600  ───────► 32.35.12.22:53600 ─────► 47.12.22.3:80
               192.138.0.4:53601  ───────► 32.35.12.22:53601 ─────► 47.12.22.3:80
               192.138.0.5:53602  ───────► 32.35.12.22:53602 ─────► 47.12.22.3:80
+
+
+migrating from a NAT instance to a NAT gateway:
+
+              Create NAT Gateway → In the same subnet where your NAT instance exists.
+              
+              Update Route Table → Change the route that points to the NAT instance so it points to the NAT gateway instead.
+              
+              Move Elastic IP → Detach the Elastic IP from the NAT instance and attach it to the NAT gateway.
+
+
+ NAT Instance:
+
+* Purpose → NAT Instance in a public subnet lets private subnet instances send outbound IPv4 traffic to internet or AWS services.
+
+* IPv6 not supported → For IPv6, you must use an egress-only internet gateway.
+
+* Quota → NAT instance limits depend on your EC2 instance quota in that AWS region.
+
+          Example: If your region allows you to run 20 EC2 instances, then you can only have up to 20 NAT instances as part of that quota.
+
+* AMI → Use Amazon Linux AMI named “amzn-ami-vpc-nat” to launch NAT instances.
+
+* Config changes →
+
+* IPv4 forwarding enabled
+
+* ICMP redirects disabled
+
+* Startup script /usr/sbin/configure-pat.sh configures IP settings
+
+👉 In short: NAT Instance = EC2-based NAT for IPv4, limited by instance quota, not for IPv6.
+
+* when we are launcing a NAT instance we have check the stop source and destination check for that NAT instance.
+
+
