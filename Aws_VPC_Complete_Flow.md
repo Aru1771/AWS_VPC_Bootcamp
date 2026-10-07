@@ -868,3 +868,5 @@ So distinguish:
 
 
 "A DHCP option set in AWS allows us to provide network configuration parameters to resources in a VPC through DHCP. The important parameters from a DevOps perspective are DNS and NTP. By default, AWS provides a VPC DNS resolver, but in an enterprise environment we can configure custom DNS servers through the DHCP option set so instances can resolve internal corporate domains. We can also specify NTP servers for time synchronization. NetBIOS settings are mainly relevant to Windows-based environments."
+
+
