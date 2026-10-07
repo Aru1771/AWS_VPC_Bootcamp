@@ -602,3 +602,269 @@ migrating from a NAT instance to a NAT gateway:
 * when we are launcing a NAT instance we have check the stop source and destination check for that NAT instance.
 
 
+DHCP option Set:
+-----------------
+
+Dynamic Host Configration protocol provides a standard for passing configrations information to the host on TCP/IP network.
+
+What DHCP does
+
+Instead of manually configuring:
+
+       IP address
+       Subnet mask
+       Default gateway
+       DNS server
+
+on every computer, a DHCP server automatically provides these network settings.
+
+For example, your laptop connects to a network and says:
+
+       "I need an IP address."
+
+The DHCP server responds:
+
+       "You can use this IP address."
+
+How the flow works
+The important thing to remember is DORA:
+
+       D → Discover
+       O → Offer
+       R → Request
+       A → Acknowledge
+
+1. DHCP Discover
+
+A new computer initially doesn't have an IP address.
+
+It sends:
+
+DHCP Discover
+
+Basically:
+
+"Is there any DHCP server available? I need an IP address."
+
+This is normally sent as a broadcast on the local network.
+
+       Client
+          |
+          | DHCP Discover
+          v
+       Network
+
+2. DHCP Offer
+
+The DHCP server receives the request and offers an IP address.
+
+For example:
+
+       DHCP Server
+            |
+            | DHCP Offer
+            | IP = 192.168.1.50
+            v
+       Client
+
+The offer can contain things like:
+
+       IP address      → 192.168.1.50
+       Subnet mask     → 255.255.255.0
+       Default gateway → 192.168.1.1
+       DNS server      → 8.8.8.8
+       Lease time      → 8 hours
+
+3. DHCP Request
+
+The client says:
+
+       "Yes, I want that IP address."
+
+So it sends:
+
+DHCP Request
+
+to the DHCP server.
+
+4. DHCP Acknowledge
+
+The DHCP server confirms:
+
+       DHCP ACK
+
+Meaning:
+
+       "Okay. You can use 192.168.1.50."
+
+Now the client has a valid network configuration.
+
+Connecting this to your image
+
+The basic concept shown is:
+
+       Computer
+          |
+          | "I need an IP"
+          v
+       Router / Network
+          |
+          v
+       DHCP Server
+          |
+          | "Here is an IP"
+          v
+       Computer
+
+The DHCP server is responsible for assigning the IP address.
+
+For example:
+
+Client
+
+       IP: 192.168.1.50
+
+The DHCP server maintains a pool such as:
+
+       192.168.1.50
+       192.168.1.51
+       192.168.1.52
+       192.168.1.53
+       ...
+
+When clients request addresses, the server leases available addresses from this pool.
+
+One important correction to the diagram
+
+The image makes it look like the client directly reaches a DHCP server across the Internet.
+That's not normally how DHCP works.
+DHCP broadcasts are generally local-network broadcasts and routers don't forward those broadcasts by default.
+In larger networks, a DHCP Relay Agent is used.
+
+For example:
+
+       Client
+          |
+          | DHCP Broadcast
+          v
+       Router / DHCP Relay
+          |
+          | DHCP Relay
+          v
+       DHCP Server
+
+The router forwards the DHCP request to the DHCP server.
+This is very common in enterprise networks.
+Simple real-world example
+Imagine your laptop connects to your office Wi-Fi.
+
+Initially:
+
+       Laptop
+       IP = ?
+       
+       It sends:
+       DHCP Discover
+       
+       The DHCP server says:
+       DHCP Offer
+       
+       IP:      10.10.10.25
+       Mask:    255.255.255.0
+       Gateway: 10.10.10.1
+       DNS:     10.10.10.10
+       
+       Laptop accepts it:
+       DHCP Request
+       
+       Server confirms:
+       DHCP ACK
+       
+       Now:
+       Laptop
+       IP:      10.10.10.25
+       Gateway: 10.10.10.1
+       DNS:     10.10.10.10
+
+The laptop can now communicate with other networks through the default gateway.
+
+DHCP option set: 
+
+An AWS DHCP option set provides network configuration to EC2 instances in a VPC through DHCP.
+
+       Domain name
+       Domain name servers (DNS)
+       NTP servers
+       NetBIOS name servers
+       NetBIOS node type
+
+
+1. DNS — very important
+   
+By default, AWS provides a DNS resolver for the VPC.
+
+For example, if your VPC is:
+10.0.0.0/16
+
+the default AWS VPC DNS resolver is typically:
+10.0.0.2
+
+You can also configure a custom DNS server in the DHCP option set.
+
+For example:
+
+domain-name-servers = 10.10.10.10
+
+Then EC2 instances in the VPC receive that DNS configuration through DHCP and use the specified DNS server for name resolution.
+
+A common enterprise scenario is:
+
+       EC2
+        |
+        | DNS query
+        v
+       Custom DNS
+       10.10.10.10
+        |
+        +----> Corporate domain
+        |
+        +----> Internal services
+        |
+        +----> Forward external queries
+       
+For example:
+
+       app.company.local
+       database.company.local
+       jenkins.company.local
+
+can be resolved through the organization's DNS infrastructure.       
+
+Domain name / hostname
+
+This part needs a small correction.
+The DHCP option set can specify the domain name that is provided to instances.
+For example:
+
+       domain-name = company.internal
+
+This doesn't mean the DHCP option set itself creates DNS records.
+Think of it as providing the DNS/domain configuration, while DNS itself is responsible for resolving names.
+So distinguish:
+
+       DHCP Option Set
+               |
+               | provides DNS/domain configuration
+               v
+       EC2 instance
+               |
+               | DNS query
+               v
+       DNS server
+               |
+               | resolves hostname
+               v
+       IP address
+
+
+"A DHCP option set in AWS allows us to provide network configuration parameters to resources in a VPC through DHCP. The important parameters from a DevOps perspective are DNS and NTP. By default, AWS provides a VPC DNS resolver, but in an enterprise environment we can configure custom DNS servers through the DHCP option set so instances can resolve internal corporate domains. We can also specify NTP servers for time synchronization. NetBIOS settings are mainly relevant to Windows-based environments."
