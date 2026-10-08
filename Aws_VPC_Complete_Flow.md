@@ -462,6 +462,7 @@ AWS VPC-SG
 * we can give source in inbound rules always custome- with our oraganization cidr range.
 * for a single instance we will attach multiple security groups.
 * SG at vpc level. we can't access one vpc sg from other vpc's.
+* Security Groups are stateful, so if incoming traffic is allowed, the response traffic is automatically allowed back, even if the outbound rule is removed.
 
 
 AWS Route Table:
@@ -870,3 +871,120 @@ So distinguish:
 "A DHCP option set in AWS allows us to provide network configuration parameters to resources in a VPC through DHCP. The important parameters from a DevOps perspective are DNS and NTP. By default, AWS provides a VPC DNS resolver, but in an enterprise environment we can configure custom DNS servers through the DHCP option set so instances can resolve internal corporate domains. We can also specify NTP servers for time synchronization. NetBIOS settings are mainly relevant to Windows-based environments."
 
 
+Network Access Control List (ACL):
+----------------------------------
+
+* A network access control list (ACL) is an optional layer of security for your VPC that acts as a firewall for controlling traffic in and out of one or more        subnets.
+
+NACL Basics:
+
+* VPC automatically comes with a modifiable default network ACL.
+* By default, it allows all inbound and outbound IPv4 traffic.
+* You can create a custom network ACL and associate it with a subnet.
+* Each subnet in your VPC must be associated with a network ACL.
+* You can associate a network ACL with multiple subnets:
+* A subnet can be associated with only one network ACL at a time.
+* A network ACL contains a numbered list of rules.
+* Rules are evaluated in order of the number of the rule.
+* The highest number that you can use for a rule is 32766.
+* You can create rules like 100, 150, 200, 250. --> this pattern is recomended by aws.or increment by 10.
+* Network ACL has separate inbound and outbound rules, and each rule can either allow or deny traffic.
+* Network ACLs are stateless.
+
+         |Resource               | Default |
+         | ---                   | ---     |
+         | Network ACLs per VPC  | 200     |
+         | Rules per network ACL | 20      |
+
+* Network ACLs per VPC → 200 : You can have up to 200 separate NACLs in one VPC.
+* Rules per Network ACL → 20 : Each NACL can have up to 20 inbound rules and 20 outbound rules (so 40 total).
+* AWS NACL quotas can be increased by submitting a request through the AWS Service Quotas console or AWS Support. Smaller increases are often auto‑approved, while    larger ones require manual review.
+
+* in NACL we have to allow both ingress and engress then only the traffic will comein and go out.
+* in my NACL i allowd ingress rules 100 for http with port 80 and TCP protocol and source is 0.0.0.0/0 it will allow all IP address and in egress rules i allowd     rule with 120 for http with port 80 and TCP protocol and source is 0.0.0.0/0. but with out allowing the Ephemeral Ports it won't work.
+
+Ephemeral Ports
+
+* An ephemeral port is a short‑lived transport protocol port used for IP communications.
+* The client initiating the request chooses the ephemeral port range.
+* The range depends on the client’s operating system.
+
+Port Ranges by System:
+
+       * Amazon Linux kernel → 32768–61000
+       * Elastic Load Balancing requests → 1024–65535
+       * Windows (up to Server 2003) → 1025–5000
+       * Windows Server 2008 and later → 49152–65535
+       * NAT Gateway → 1024–65535
+       * AWS Lambda functions → 1024–65535
+
+Eg:
+
+if i make a request to the server with my IP at that time my OS will atomatically add one source port to my IP based on the OS. eg: 42.892.83.1:32777 --> ip with source. Now the request flow and reach the NACL and check the http is allowd or not and ephemeral ports are opned or not. if both are allowed the request will flow forward.
+
+       | **Type**     | **Source IP** | **Source Port** | **Destination IP** | **Destination Port** |
+       | ---          | ---           | ---             | ---                | ---                  |
+       | **REQUEST**  | 32.12.22.11   | 32770           | 42.1.2.10          | 443                  |
+       | **RESPONSE** | 42.1.2.10     | 443             | 32.12.22.11        | 32770                |
+
+
+       In the request:
+
+       Source IP: 32.12.22.11 → Source Port: 32770
+       
+       Dest. IP: 42.1.2.10 → Dest. Port: 443
+       
+       In the response:
+       
+       Source IP: 42.1.2.10 → Source Port: 443
+       
+       Dest. IP: 32.12.22.11 → Dest. Port: 32770
+
+now the server process the request and send back the request at the time of responding back it will check in the NACL egress is this http traffic is allowd and the ephemeral ports are allowd or not.
+
+Scenario: 1
+
+     ✅ Improved Explanation:  
+    
+      In ingress rules, you must allow both the server’s destination port (e.g., 443) and the client’s ephemeral port range so that the incoming request can reach       the server.
+              
+     In egress rules, you don’t need to specify the server’s port (443) because, in egress traffic, that port becomes the source port. Instead, you must allow the      destination ports, which correspond to the client’s ephemeral port range, to ensure the response can return to the client.
+
+Scenario: 2
+
+       If you configure ingress to allow only the server’s destination port (e.g., 443), and configure egress to allow only the client’s ephemeral port range, the        communication will still succeed.
+       
+       Ingress: The server port (443) is open, so requests can reach the server.
+       
+       Egress: The client’s ephemeral ports are allowed, so the server’s response can return to the client.
+       
+       You don’t need to explicitly allow the server port in egress, because in outbound traffic that port is the source port, not the destination.
+
+
+✅ Working Scenarios
+
+       Ingress: server port + client ephemeral range  
+       Egress: client ephemeral range → Works (full coverage).
+       
+       Ingress: only server port  
+       Egress: only client ephemeral range → Works (minimal but sufficient).
+       
+       Ingress: server port + client ephemeral range  
+       Egress: all ports allowed → Works (looser but fine).
+
+❌ Non‑Working Scenarios
+
+       Ingress: only server port  
+       Egress: only server port (443) → Fails (client ephemeral not allowed).
+       
+       Ingress: only client ephemeral range  
+       Egress: only client ephemeral range → Fails (server port not allowed in ingress).
+       
+       Ingress: deny ephemeral range  
+       Egress: allow ephemeral range → Fails (request blocked before reaching server).
+
+* Always allow server port in ingress.
+
+* Always allow client ephemeral range in egress.
+
+  
