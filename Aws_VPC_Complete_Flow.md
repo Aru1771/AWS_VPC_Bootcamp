@@ -987,4 +987,166 @@ Scenario: 2
 
 * Always allow client ephemeral range in egress.
 
-  
+
+AWS VPC-Peering:
+-----------------
+
+* VPC-Peering is the service we use to establesh a connection b/w the two vpc's
+
+* Perring means the method allows two networks to coonect and exchage the traffic directly without having to pay a third party to carry traffic accross the          network.
+
+* AWS uses the existing infrastructure of a VPC to create a VPC peering connection:
+
+       Sharing data across accounts becomes easier.
+       
+       Sharing data across instances across VPCs becomes easier.
+       
+       We can establish peering relationships between VPCs across different AWS Regions (Inter‑Region VPC Peering).
+       
+       Communication with EC2, RDS, Lambda is possible without needing:
+       • Gateways
+       • VPN connections
+       • Separate network appliances
+       
+       All traffic remains in the Private IP Space.
+
+Steps to Establish VPC Peering Connection:
+
+       Requester VPC sends a peering request to the accepter VPC.
+       
+       Accepter VPC approves the request.
+       
+       Both VPC owners update route tables to allow traffic between them.
+       
+       Update security groups (and optionally DNS resolution).
+       
+       Important: If instances use public hostnames for communication, you must enable DNS resolution in the VPC peering settings.
+       
+       Note: CIDR blocks of the two VPCs must not overlap.
+
+VPC Peering Connection Lifecycle:
+
+       Initiating – Request → moves to Pending Acceptance.
+       
+       Pending Acceptance can lead to:
+       
+       Provisioning (if accepted)
+       
+       Expired (if not accepted within 7 days)
+       
+       Rejected
+       
+       Provisioning can lead to:
+       
+       Active (connection established)
+       
+       Deleting
+       
+       Active → can later move to Deleting (either party can delete, including inter‑region peering).
+       
+       Deleting → becomes Deleted.
+       
+       Failed, Expired, Rejected, Deleted → all transition to No Longer Visible.
+
+Visibility Notes
+
+       Failed: visible for 2 hours to requester.
+       
+       Expired: visible for 2 days to both parties.
+       
+       Rejected: visible for 2 days to requester, 2 hours to accepter.
+       
+       Deleted: visible for 2 hours to the one who deleted, 2 days to the other party.
+
+
+No Support – Overlapping CIDR Blocks
+
+* AWS does not support VPC peering connections if the CIDR blocks overlap.
+
+Case 1
+
+       VPC‑1 CIDR: 10.0.0.0/16
+       
+       VPC‑2 CIDR: 10.0.0.0/16 → ❌ Not allowed
+
+Case 2
+
+       VPC‑1 CIDR: 10.3.0.0/16
+       
+       VPC‑2 CIDR: 10.2.0.0/16 → Allowed
+
+🧠 Sleep‑easy summary:
+
+       VPC peering requires non‑overlapping CIDR ranges.
+       
+       If CIDRs overlap, peering connection cannot be established.
+
+
+Example scenarios:
+
+Scenario: 1
+
+Multiple VPC Peering Connection
+
+
+       * VPC peering is a one‑to‑one relationship between two VPCs.
+       
+       * There is no support for transitive peering (you cannot connect VPC‑1 to VPC‑3 through VPC‑2).
+       
+       * Each VPC must establish a direct peering connection with the other if communication is required.
+
+
+🧠 Sleep‑easy summary:
+
+       One‑to‑one only.
+       
+       No transitive peering.
+       
+       Direct connections needed for each pair.
+
+Scenario: 2
+
+Edge to Edge Routing Through a VPN or AWS Direct Connect
+
+* AWS does not support edge‑to‑edge routing between VPCs and external networks when using VPN or Direct Connect.
+
+Example:
+
+       VPC‑1 ↔ VPC‑2 → connected via VPC peering.
+       
+       VPC‑2 ↔ Corporate Network → connected via Site‑to‑Site VPN or Direct Connect.
+       
+       VPC‑1 ❌ cannot directly route to the Corporate Network through VPC‑2.
+
+Scenario: 3
+
+* Edge to Edge Routing Through an Internet Gateway
+* AWS does not support edge‑to‑edge routing through an Internet Gateway.
+
+Example:
+
+       VPC‑1 ↔ VPC‑2 → connected via VPC peering.
+       
+       VPC‑1 ↔ Internet Gateway → connected to the internet.
+       
+       VPC‑2 ❌ cannot directly route to the internet through VPC‑1’s Internet Gateway.
+
+VPC Peering – Things to Remember
+
+       * No overlapping CIDRs → VPCs must have different IP ranges.
+       
+       * No transitive peering → You can’t connect VPC‑A → VPC‑B → VPC‑C. Each must connect directly.
+       
+       * Only one peering per pair → You can’t create multiple peering links between the same two VPCs.
+       
+       * Tags are local → The labels (tags) you add only show up in your own account/region. They don’t travel to the other VPC.
+       
+       * No DNS in peer VPC → You can’t use Amazon’s DNS server from the other VPC. Each VPC uses its own DNS.
+
+Default Limits
+
+       * Active peering connections → You can have up to 50 per VPC (can stretch to 125, but too many may slow things down).
+       
+       * Outstanding requests → You can only have 25 pending requests waiting for approval at a time.
+       
+       * Expiry → A peering request dies after 1 week if not accepted.
