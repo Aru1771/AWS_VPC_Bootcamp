@@ -1207,3 +1207,53 @@ Subnet B Route Table: it will use Gateway Vpc endpoint to send the traffic to AW
 AWS VPC FLOWLOGS:
 ------------------
 
+* VPC Flow Logs is a feature that enables you to capture information about the IP traffic going to and from network interfaces in your VPC.
+
+       1. Traffic Monitor → Watch what’s coming in and out of your instance.
+       2. Rule Checker → Spot if your security group rules are blocking too much.
+       3. Direction Finder → See which way the traffic is flowing (inbound or outbound).
+
+
+* VPC Flow Logs capture information about the IP traffic going to and from network interfaces in your VPC.
+* Flow logs can help you with monitoring and troubleshooting network connectivity.
+
+
+3 Key Points:
+
+       Step 1: The resource for which to create the flow log  
+       Step 2: The type of traffic to capture (accepted traffic, rejected traffic, or all traffic)  
+       Step 3: The destinations to which you want to publish the flow log data
+
+
+Key Features of VPC Flow Logs:
+
+      Capture Network Traffic: Logs all traffic going in and out of your VPC.
+      Integration: Can be sent to CloudWatch Logs, S3, or a partner service.
+      Filtering: You can filter logs based on traffic type.
+
+ VPC Flow Logs – Log Format
+
+       <version> <account-id> <interface-id> <srcaddr> <dstaddr> <srcport> <dstport> <protocol> <packets> <bytes> <start> <end> <action> <log-status>
+       
+       Fields:
+       
+       version      → The VPC Flow Logs version (default = 2; highest version among chosen fields if mixed).
+       account-id   → AWS account ID of the owner of the source network interface.
+       interface-id → ID of the network interface where traffic is recorded.
+       srcaddr      → Source IP address (incoming traffic) or private IP of the interface (outgoing traffic).
+       dstaddr      → Destination IP address (outgoing traffic) or private IP of the interface (incoming traffic).
+       srcport      → Source port of the traffic.
+       dstport      → Destination port of the traffic.
+       protocol     → IANA protocol number of the traffic.
+       action       → ACCEPT (allowed by security groups/ACLs) or REJECT (blocked).
+       log-status   → OK (logging normal), NODATA (no traffic during interval), SKIPDATA (some records skipped due to capacity/error).
+
+
+* In Production we will store VPC flow Logs in Cloudwatch
+* in lower envronment related VPC flow logs we will store in S3.
+* we can enble VPC flow logs both subnet and VPC level. recommended way is always implement it in VPC level.
+* if we are storing vpc logs at s3 we have to choose aws athina service or splunk to see those logs. because these logs will store in log.gz format.
+* we can also downlod the log file and unzip in local pc and we can able to see the logs.
+* if any issue happed at network level we can see in these vpc flow logs.
+* To learn more About it check this page: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
+
