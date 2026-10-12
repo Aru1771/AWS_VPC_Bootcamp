@@ -1150,3 +1150,60 @@ Default Limits
        * Outstanding requests → You can only have 25 pending requests waiting for approval at a time.
        
        * Expiry → A peering request dies after 1 week if not accepted.
+
+
+AWS VPC END POINTS:
+--------------------
+
+* A VPC endpoint enables private connections between your VPC and supported AWS services and VPC endpoint services powered by AWS PrivateLink.
+
+* They are horizontally scaled, redundant, and highly available VPC components.
+* 
+* Instances in your VPC do not require public IP addresses to communicate with resources in the service.
+
+There are two types of VPC endpoints:
+
+• Interface endpoints
+• Gateway endpoints
+
+* Endpoint = address where service talks to client.
+
+• INTERFACE ENDPOINT:
+
+       Interface Gateway uses an Elastic Network Interface (ENI) and a private IP address.
+       Interface endpoints are powered by AWS Private Link. (Will be discussed in Upcoming session)
+       
+       Do not need an internet gateway:
+       
+              • NAT device, or a
+              • Virtual private gateway
+       
+       Default DNS Name: kinesis.us-west-2.amazonaws.com
+
+* GATEWAY ENDPOINT
+
+       A gateway endpoint is a gateway that you specify as a target for a route in your route table for traffic destined to a supported AWS service.
+       • Amazon S3
+       • DynamoDB
+       You need to add them to the Route table and route your traffic to the AWS Services.
+
+Subnet A Route Table: it will send traffic through IGW 
+
+       | DESTINATION | TARGET         |
+       | ---         | ---            |
+       | 10.0.0.0/16 | LOCAL          |
+       | 0.0.0.0/0   | INTERNET_GW_ID |
+
+Subnet B Route Table: it will use Gateway Vpc endpoint to send the traffic to AWS services.
+
+       | DESTINATION                  |  TARGET |
+       | ---                          | ---     |
+       | 10.0.0.0/16                  | LOCAL   |
+       | PREFIX LIST ID FOR AMAZON S3 | VPCE-ID |
+
+
+
+
+AWS VPC FLOWLOGS:
+------------------
+
