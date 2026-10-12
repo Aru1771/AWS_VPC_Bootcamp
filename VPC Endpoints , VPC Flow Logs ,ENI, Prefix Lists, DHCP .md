@@ -31,13 +31,11 @@ Key Features of VPC Flow Logs:
       Filtering: You can filter logs based on traffic type.
 
 * In Production we will store VPC flow Logs in Cloudwatch
-* in lower envronment related VPC floe logs we will store in S3.
-
+* in lower envronment related VPC flow logs we will store in S3.
 * we can enble VPC flow logs both subnet and VPC level. recommended way is always implement it in VPC level.
 * if we are storing vpc logs at s3 we have to choose aws athina service or splunk to see those logs. because these logs will store in log.gz format.
-* we can also downlod the lof file and unzip in local pc and we can able to see the logs.
+* we can also downlod the log file and unzip in local pc and we can able to see the logs.
 * if any issue happed at network level we can see in these vpc flow logs.
-
 * To learn more About it check this page: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
 
 
