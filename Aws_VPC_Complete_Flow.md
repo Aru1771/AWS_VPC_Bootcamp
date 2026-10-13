@@ -1245,9 +1245,19 @@ Key Features of VPC Flow Logs:
        srcport      → Source port of the traffic.
        dstport      → Destination port of the traffic.
        protocol     → IANA protocol number of the traffic.
+       Packets
        action       → ACCEPT (allowed by security groups/ACLs) or REJECT (blocked).
        log-status   → OK (logging normal), NODATA (no traffic during interval), SKIPDATA (some records skipped due to capacity/error).
 
+Aggregation interval = time window.
+
+       AWS collects all traffic flows happening in that window and puts them together into one log record.
+       
+       By default, the longest window is 10 minutes.
+       
+       Example: If traffic happens between 0–10 minutes, it’s grouped into one record. Traffic from 10–20 minutes goes into another record.
+
+👉 Think of it like a notebook: every 10 minutes, AWS writes down all the traffic events that happened in that period on one page. Then it starts a new page for the next 10 minutes.
 
 * In Production we will store VPC flow Logs in Cloudwatch
 * in lower envronment related VPC flow logs we will store in S3.
@@ -1256,4 +1266,6 @@ Key Features of VPC Flow Logs:
 * we can also downlod the log file and unzip in local pc and we can able to see the logs.
 * if any issue happed at network level we can see in these vpc flow logs.
 * To learn more About it check this page: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
+
+
 
