@@ -1268,4 +1268,38 @@ Aggregation interval = time window.
 * To learn more About it check this page: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
 
 
+AWS BastenHost:
+---------------
 
+A Bastion Host is an EC2 instance deployed in a public subnet of a VPC. It provides secure administrative access to instances in private subnets. We allow SSH access to the Bastion Host only from trusted IP addresses, and configure the private instances' security groups to allow SSH from the Bastion Host's security group. Administrators first connect to the Bastion Host and then use it to access private instances without exposing those instances directly to the internet.”
+One final distinction: A Bastion Host does not automatically allow all traffic coming into it to reach private instances. The SSH client must initiate a second connection, and the relevant security groups, routes, and network ACLs must allow it.
+
+* The connection happens in two separate SSH sessions:
+  
+       1. Your laptop connects to the Bastion Host.
+       2. From the Bastion Host, you connect to the private EC2 instance.
+
+* Security Group configuration
+
+This is the most important part of your explanation.
+
+       Security group	Inbound rule	    Source
+       Bastion SG	         SSH, TCP 22     Your trusted public IP /32
+       Private EC2 SG	  SSH, TCP 22     Bastion Host security group ID
+
+For example:
+
+       - Bastion SG: sg-0123bastion
+       - Private EC2 SG: sg-0456private
+
+In the private EC2 security group's inbound rules, configure:
+
+       Type: SSH
+       Protocol: TCP
+       Port: 22
+       Source: sg-0123bastion
+
+* This allows SSH connections from network interfaces associated with the Bastion security group, subject to the other network and security rules.
+* Important: Referencing the Bastion SG does not mean the Bastion Host is the only possible path in every circumstance. Any other permitted network path and security rules must also be considered.
+* The private instance does not need a public IP for this connection. The VPC route tables and network ACLs must also permit the traffic.
+* For better security, avoid copying private keys onto the Bastion Host. Consider SSH agent forwarding or, preferably, AWS Systems Manager Session Manager where suitable.
