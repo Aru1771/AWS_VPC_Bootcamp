@@ -1303,3 +1303,95 @@ In the private EC2 security group's inbound rules, configure:
 * Important: Referencing the Bastion SG does not mean the Bastion Host is the only possible path in every circumstance. Any other permitted network path and security rules must also be considered.
 * The private instance does not need a public IP for this connection. The VPC route tables and network ACLs must also permit the traffic.
 * For better security, avoid copying private keys onto the Bastion Host. Consider SSH agent forwarding or, preferably, AWS Systems Manager Session Manager where suitable.
+
+
+
+AWS Site-To-Site VPN:
+---------------------
+
+* By using this site to site VPN we can enable access to our remote network from our vpc by creating an aws-site to site VPN connection.
+* Site-to-Site VPN lets your AWS cloud (VPC) talk securely to your company’s on‑premise network.
+* It uses IPsec tunnels (encrypted pathways) to protect the data.
+* IPv6 traffic is not supported if you use a virtual private gateway.
+* It doesn’t support Path MTU Discovery (so you need to set packet sizes carefully).
+* Make sure your AWS network and your on‑premise network use different CIDR ranges (no overlap).
+
+👉 Think of it like this: AWS builds a locked tunnel between your cloud and your office network. Both sides can send data back and forth safely, but you need to follow some rules (no overlapping IP ranges, no IPv6, careful with packet sizes).
+
+
+How site to site VPN works:
+
+* AWS Site-to-Site VPN creates a secure tunnel between your AWS cloud (VPC) and your company’s on‑premise network.
+
+* It always sets up two VPN tunnels for reliability (if one fails, the other works).
+
+* On the AWS side, you can connect using either a Virtual Private Gateway or a Transit Gateway.
+
+* On your company side, you need a Customer Gateway (your VPN device).
+
+* Once connected, your AWS servers (like instances in a subnet) can safely talk to your office network.
+
+👉 Think of it like AWS giving you two locked highways between your cloud and your office. If one highway is blocked, traffic automatically moves through the other.
+
+1. Virtual Private Gateway:
+
+       * A Virtual Private Gateway (VGW) is the VPN device on the AWS side of a Site‑to‑Site VPN.
+       
+       * You create it and attach it to your VPC when you want to connect your cloud network to your office/on‑premise network.
+       
+       * It acts like the entry point for the secure tunnel into AWS.
+       
+       * Each VGW has an ASN (Autonomous System Number).
+       
+       * Default ASN is 64512.
+       
+       * If you created it before June 30, 2018, the default ASN was different depending on the region (e.g., 17493 in Singapore, 10124 in Tokyo, 9059 in Ireland, 7224 in other regions).
+
+👉 Think of it like AWS giving you a doorway (VGW) into your cloud. You attach that doorway to your VPC, and then your office VPN device connects through it securely.
+
+2. AWS Transit Gateway (TGW):
+
+       * An AWS Transit Gateway (TGW) is like a central hub.
+       
+       * It connects multiple VPCs (cloud networks) and also your on‑premise networks.
+       
+       * Instead of making separate VPN connections for each VPC, you connect them all to the Transit Gateway.
+       
+       * From there, the TGW links to your Customer Gateway (your VPN device) and then to your office network.
+       
+       * This makes network management easier because everything passes through one hub instead of many point‑to‑point links.
+
+👉 Think of it like a big router in the cloud that ties all your AWS networks and your office network together in one place.
+
+
+3. Customer Gateway Device:
+
+       * A Customer Gateway Device is the VPN device or software on your side (the on‑premise network).
+       
+       * It connects to AWS through the internet using secure tunnels.
+       
+       * AWS provides a Virtual Private Gateway on its side, and your device talks to it.
+       
+       * There are usually two tunnels (Tunnel 1 and Tunnel 2) for reliability.
+       
+       * Data passing through these tunnels is protected with IPsec encryption/decryption.
+
+👉 Think of it like this: AWS has a secure door (VGW), and your office has a lockable device (Customer Gateway). The internet is the road between them, and the two encrypted tunnels are like two secure lanes carrying traffic safely back and forth.
+
+Accelerated Site‑to‑Site VPN:
+
+       * An Accelerated Site‑to‑Site VPN is a faster version of the normal AWS VPN.
+       
+       * It uses AWS Global Accelerator to send your traffic to the nearest AWS edge location (closest to your office VPN device).
+       
+       * from vpc to edge location traffic flow it will use AWS Globle network.
+       
+       * once it reached the edge location form edge location to Custome Gateway it will use internet. 
+       
+       * This reduces latency (delay) and improves performance when connecting your on‑premise network to AWS.
+       
+       * The setup still uses IPsec tunnels for secure communication, but the routing path is optimized.
+
+👉 Think of it like this: instead of your data taking random roads across the internet, AWS gives it a fast expressway through the nearest AWS edge location, making the trip quicker and smoother.
+
+
