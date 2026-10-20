@@ -25,7 +25,7 @@ AWS VPC:
 
 
         if required we can add more then one cidr block but the sequence is same.
-        like fiest cidr is 172.31.0.0\16
+        like first cidr is 172.31.0.0\16
         the second cider is like 172.34.0.0.\16
 
 * If we create a VPC what are the default things we will get:
@@ -50,7 +50,7 @@ AWS VPC:
 * What is CIDR:
 
       CIDR means: CLassless-inter Domine Routings.
-      CIDR is a mentiod for allocating the IP addresses and for ip routing
+      CIDR is a mentioned for allocating the IP addresses and for ip routing
 
        If i took 10.100.0.0/16 as a CIDR:
 
@@ -87,23 +87,23 @@ CIDR-Tables to remember:
 
 Most important CIDR cheat sheet:
               
-              | CIDR | Host bits | Total IPs | Equivalent /24s |
-              |---|---:|---:     |------------:|------------------
-              | `/16`  | 16      | 65,536    | 256 |
-              | `/17` | 15       | 32,768    | 128 |
-              | `/18` | 14       | 16,384    | 64 |
-              | `/19` | 13       | 8,192     | 32 |
-              | `/20` | 12       | 4,096     | 16 |
-              | `/21` | 11       | 2,048     | 8 |
-              | `/22` | 10       | 1,024     | 4 |
-              | `/23` | 9        | 512       | 2 |
-              | `/24` | 8        | 256       | 1 |
-              | `/25` | 7        | 128       | 1/2 |
-              | `/26` | 6        | 64        | 1/4 |
-              | `/27` | 5        | 32        | 1/8 |
-              | `/28` | 4        | 16        | 1/16 |
-              | `/29` | 3        | 8         | 1/32 |
-              | `/30` | 2        | 4         | 1/64 |
+              | CIDR   | Host bits | Total IPs   | Equivalent /24s |
+              |---|---:|---:       |------------:|------------------
+              | `/16`  | 16        | 65,536      | 256 |
+              | `/17`  | 15        | 32,768      | 128 |
+              | `/18`  | 14        | 16,384      | 64 |
+              | `/19`  | 13        | 8,192       | 32 |
+              | `/20`  | 12        | 4,096       | 16 |
+              | `/21`  | 11        | 2,048       | 8 |
+              | `/22`  | 10        | 1,024       | 4 |
+              | `/23`  | 9         | 512         | 2 |
+              | `/24`  | 8         | 256         | 1 |
+              | `/25`  | 7         | 128         | 1/2 |
+              | `/26`  | 6         | 64          | 1/4 |
+              | `/27`  | 5         | 32          | 1/8 |
+              | `/28`  | 4         | 16          | 1/16 |
+              | `/29`  | 3         | 8           | 1/32 |
+              | `/30`  | 2         | 4           | 1/64 |
 
 How we caluculate the Total IP addresses of CIDR:
 
@@ -171,7 +171,7 @@ Two /24s:
        
        10.0.2.0/24
        +
-       10.0.3.0/24
+       10.0.3.0/24 
 Range:
 
        10.0.2.0 → 10.0.3.255
