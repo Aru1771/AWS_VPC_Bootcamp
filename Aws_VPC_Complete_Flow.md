@@ -4,7 +4,7 @@ AWS VPC:
 
 * one IGW we can attch to one VPC
 
-* VPC CIDR range always in b/w the \16 to \18
+* VPC CIDR range always in b/w the \16 to \28
 
 
        if you take less than 16 we will get more than 65,536 Ip address.
