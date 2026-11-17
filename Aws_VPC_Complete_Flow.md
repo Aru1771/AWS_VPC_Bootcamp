@@ -1152,6 +1152,57 @@ Default Limits
        * Expiry → A peering request dies after 1 week if not accepted.
 
 
+
+AWS Transit Gateway (TGW):
+-------------------------
+
+* AWS Transit Gateway is a central networking hub that connects multiple VPCs and on-premises networks without creating individual VPC peering connections between every VPC.
+
+* Why do we need Transit Gateway?
+
+* Imagine your company has 5 VPCs:
+
+       - VPC 1 – Development
+       - VPC 2 – Testing
+       - VPC 3 – Production
+       - VPC 4 – Shared Services
+       - VPC 5 – Monitoring
+
+* Without Transit Gateway – VPC Peering
+* You need individual peering connections between VPCs if they all need to communicate.
+
+<img width="2000" height="1373" alt="image" src="https://github.com/user-attachments/assets/bff06fe2-4328-43ff-b617-6c0d27a7bf00" />
+
+* As the number of VPCs increases, managing individual connections and route tables becomes complicated.
+
+* For 5 VPCs, a full mesh requires 10 peering connections.
+
+With Transit Gateway
+
+* Instead of connecting every VPC to every other VPC, connect all VPCs to one Transit Gateway.
+
+
+<img width="1080" height="607" alt="image" src="https://github.com/user-attachments/assets/9fcf3256-13ff-475e-9970-76aeb07e1095" />
+
+* All VPCs connect to the central Transit Gateway.
+
+<img width="775" height="403" alt="image" src="https://github.com/user-attachments/assets/23988514-a211-48e3-a9a3-8039cf34a075" />
+
+<img width="703" height="707" alt="image" src="https://github.com/user-attachments/assets/52236353-f72c-4cb7-986d-435a4aab1062" />
+
+<img width="732" height="507" alt="image" src="https://github.com/user-attachments/assets/e9fd33d1-5f75-4bcd-a8a9-cec93dcf2cb7" />
+
+<img width="826" height="416" alt="image" src="https://github.com/user-attachments/assets/807a1235-afbb-4d0f-a17b-ebd572e3463c" />
+
+<img width="997" height="638" alt="image" src="https://github.com/user-attachments/assets/76f75cb9-1adc-4f92-9d80-0ad154d21d9b" />
+
+<img width="915" height="401" alt="image" src="https://github.com/user-attachments/assets/81697b48-2c32-47c6-87e1-0bf5874ff98f" />
+
+<img width="943" height="406" alt="image" src="https://github.com/user-attachments/assets/dfe0b90c-030b-4ffc-8bb3-a2c4f74f965b" />
+
+
+
+
 AWS VPC END POINTS:
 --------------------
 
