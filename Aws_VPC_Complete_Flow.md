@@ -1200,7 +1200,34 @@ With Transit Gateway
 
 <img width="943" height="406" alt="image" src="https://github.com/user-attachments/assets/dfe0b90c-030b-4ffc-8bb3-a2c4f74f965b" />
 
+AWS ENI-Elastic Network Interface:
+----------------------------------
 
+* Aws ENI is the virtual Network card in the cloud.
+
+* In real world we have virtaul nic card's to connect the network from our laptop.
+
+* By default when we create a EC2 instance we get one Primary ENI. if required we can attach one more ENI to our EC2 by creating the ENI.
+
+* Suppose your application needs separate network connectivity for management traffic.
+
+Three main things:
+
+1. An ENI and the EC2 instance must be in the same Availability Zone to attach it.
+2. An ENI can be attached to only one EC2 instance at a time.
+3. The primary ENI cannot be detached while the instance is running.
+
+ENI Lifecycle:
+
+Create ENI: Create an additional virtual network interface in a subnet.
+Attach ENI: Attach the newly created ENI to an EC2 instance.
+Detach ENI: Remove a secondary ENI from an EC2 instance.The ENI still exists in your VPC and can be attached to another compatible instance.
+Delete ENI: Delete the ENI when it is no longer needed. You cannot delete an attached ENI.
+
+
+What happens when EC2 terminates:
+
+<img width="980" height="290" alt="image" src="https://github.com/user-attachments/assets/63c0e5c1-f80c-4dc3-9a4c-e324d7a568c5" />
 
 
 AWS VPC END POINTS:
