@@ -1230,6 +1230,17 @@ What happens when EC2 terminates:
 <img width="980" height="290" alt="image" src="https://github.com/user-attachments/assets/63c0e5c1-f80c-4dc3-9a4c-e324d7a568c5" />
 
 
+
+
+Aws PrivateLink:
+----------------
+
+* AWS PrivateLink is the underlying AWS technology. You configure its components to establish the connection.
+
+* AWS PrivateLink provides the private connectivity between them.
+
+
+
 AWS VPC END POINTS:
 --------------------
 
