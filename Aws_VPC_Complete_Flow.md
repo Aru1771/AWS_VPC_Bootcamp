@@ -1269,6 +1269,25 @@ There are two types of VPC endpoints:
        
        Default DNS Name: kinesis.us-west-2.amazonaws.com
 
+When we are creating interface endpoins we have to remember two things
+
+1. Provider
+2. Consumer
+
+1. Provider: How exposes the service
+2. Consumer: How need to access the service
+
+In Provider point-of view Provider need to create Two main thing NLB and Endpoint service. When we create a Endpoint service it will give one endpoint service Name.
+
+              Provider runs its application/service (for example, on EC2).
+              Provider creates an NLB and registers the service targets.
+              Provider creates a VPC Endpoint Service and associates it with the NLB.
+              Consumer creates an Interface VPC Endpoint to connect to that Endpoint Service.
+
+In Consumer point-of view Consumer need to craete one Interface endpoint then the consumer will get one Private IP address.
+
+* AWS PrivateLink is the underlying AWS technology. You configure its components to establish the connection.
+
 * GATEWAY ENDPOINT
 
        A gateway endpoint is a gateway that you specify as a target for a route in your route table for traffic destined to a supported AWS service.
